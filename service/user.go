@@ -3,22 +3,21 @@ package service
 import (
 	"gin-test/database"
 	"gin-test/model"
-	"github.com/gin-gonic/gin"
+	// "github.com/gin-gonic/gin"
 )
 
 type UserService struct{}
 
-type User model.User
+// type User model.User
 
-func (service UserService) All() ([]User, error) {
+func (service UserService) All() ([]model.User, error) {
 	db := database.GetDB()
 
-	var userData []User
+	var userData []model.User
 
 	// if err := db.Preload("Books").Find(&userData).Error; err != nil {
 	// 	return nil, err
 	// }
-
 
 	if err := db.Find(&userData).Error; err != nil {
 		return nil, err
@@ -39,20 +38,14 @@ func (service UserService) All() ([]User, error) {
 // 	return userData, nil
 // }
 
-func (service UserService) Create(c *gin.Context) (User, error) {
-	var userData User
-
-	if err := c.Bind(&userData); err != nil {
-		return userData, err
-	}
-
+func (service UserService) Create(user *model.User) error {
 	db := database.GetDB()
 
-	if err := db.Create(&userData).Error; err != nil {
-		return userData, err
+	if err := db.Create(&user).Error; err != nil {
+		return err
+	} else {
+		return nil
 	}
-
-	return userData, nil
 }
 
 // func (service UserService) Update(id string, c *gin.Context) (User, error) {

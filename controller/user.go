@@ -1,11 +1,11 @@
 package controller
 
 import (
-	"encoding/json"
 	"gin-test/model"
 	"gin-test/plugin"
 	"gin-test/service"
 	"github.com/gin-gonic/gin"
+	"log"
 	"net/http"
 )
 
@@ -20,9 +20,8 @@ func (ctrl *UserController) List(c *gin.Context) {
 
 	if err != nil {
 		// logrus.Warn(err.Error())
-		e, _ := json.Marshal(err.Error())
 
-		c.JSON(404, gin.H{"error": e})
+		c.JSON(404, gin.H{"error": err.Error()})
 	} else {
 		c.JSON(200, userData)
 	}
@@ -31,24 +30,38 @@ func (ctrl *UserController) List(c *gin.Context) {
 func (ctrl *UserController) Create(c *gin.Context) {
 	var user model.User
 
-	err := plugin.Validate(user)
+	// Bind form-data request
+	// c.Bind(&user)
 
-	if err != nil {
+	// Bind query string or post data
+	c.ShouldBind(&user)
+
+	// 回傳簡單錯誤,gin預設
+	// if err := c.ShouldBind(&user); err != nil {
+	// 	c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+
+	// 	return
+	// }
+
+	// 回傳複雜錯誤,validator套件
+	if err := plugin.Validate(user); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err})
 
 		return
 	}
 
-	// var userService service.UserService
+	var userService service.UserService
 
-	// userData, err := userService.Create(c)
+	log.Printf("%T", user)
 
-	// if err != nil {
-	// 	// logrus.Warn(err.Error())
-	// 	fmt.Println(err)
+	if err := userService.Create(&user); err != nil {
+		// logrus.Warn(err.Error())
+		log.Println(err.Error())
 
-	// 	c.JSON(http.StatusBadRequest, gin.H{"error": err})
-	// } else {
-	// 	c.JSON(201, userData)
-	// }
+		c.JSON(http.StatusConflict, gin.H{"error": err.Error()})
+	} else {
+		log.Println(user)
+
+		c.JSON(http.StatusOK, user)
+	}
 }

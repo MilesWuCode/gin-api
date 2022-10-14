@@ -10,7 +10,7 @@ import (
 	"strings"
 )
 
-func Validate(s interface{}) validator.ValidationErrorsTranslations {
+func Validate(s interface{}) map[string]string {
 	zh_tW := zh_tW.New()
 
 	en := en.New()
@@ -19,25 +19,22 @@ func Validate(s interface{}) validator.ValidationErrorsTranslations {
 
 	trans, _ := uni.GetTranslator("zh_tw")
 
-	// trans.Add("Name", "名稱", false)
-	// trans.Add("email", "帳號", false)
-
 	validate := validator.New()
 
-	// validate.RegisterTagNameFunc(func(field reflect.StructField) string {
-	// 	label := field.Tag.Get("label")
-	// 	if label == "" {
-	// 		return field.Name
-	// 	}
-	// 	return label
-	// })
-
 	validate.RegisterTagNameFunc(func(fld reflect.StructField) string {
+		label := fld.Tag.Get("label")
+
+		if label != "" {
+			return label
+		}
+
 		name := strings.SplitN(fld.Tag.Get("json"), ",", 2)[0]
+
 		// skip if tag key says it should be ignored
 		if name == "-" {
 			return ""
 		}
+
 		return name
 	})
 
@@ -46,9 +43,19 @@ func Validate(s interface{}) validator.ValidationErrorsTranslations {
 	err := validate.Struct(s)
 
 	if err != nil {
-		errs := err.(validator.ValidationErrors)
+		errMsg := make(map[string]string)
 
-		return errs.Translate(trans)
+		for _, err := range err.(validator.ValidationErrors) {
+			fieldName := err.StructField()
+
+			field, _ := reflect.TypeOf(s).FieldByName(fieldName)
+
+			jsonKey := field.Tag.Get("json")
+
+			errMsg[jsonKey] = err.Translate(trans)
+		}
+
+		return errMsg
 	} else {
 		return nil
 	}
