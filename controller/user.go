@@ -1,29 +1,45 @@
 package controller
 
 import (
+	"fmt"
 	"gin-test/model"
 	"gin-test/plugin"
 	"gin-test/service"
 	"github.com/gin-gonic/gin"
-	"log"
+	"go.uber.org/zap"
 	"net/http"
 )
 
-type UserController struct {
+var logger *zap.Logger
+
+func init() {
+	// Log
+	var logger = plugin.Log()
+
+	defer logger.Sync()
+}
+
+type UserController struct{}
+
+type Pagination struct {
+	Page  int `form:"page" default:1`
+	Limit int `form:"limit" default:10`
 }
 
 func (ctrl *UserController) List(c *gin.Context) {
-
 	var userService service.UserService
 
-	userData, err := userService.All()
+	var p Pagination
 
-	if err != nil {
-		// logrus.Warn(err.Error())
+	// Bind query string or post data
+	c.ShouldBind(&p)
 
-		c.JSON(404, gin.H{"error": err.Error()})
+	fmt.Printf("%+v", p)
+
+	if list, err := userService.All(); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 	} else {
-		c.JSON(200, userData)
+		c.JSON(http.StatusOK, list)
 	}
 }
 
@@ -52,16 +68,11 @@ func (ctrl *UserController) Create(c *gin.Context) {
 
 	var userService service.UserService
 
-	log.Printf("%T", user)
-
 	if err := userService.Create(&user); err != nil {
-		// logrus.Warn(err.Error())
-		log.Println(err.Error())
+		logger.Error("userService.Create", zap.String("err", err.Error()))
 
 		c.JSON(http.StatusConflict, gin.H{"error": err.Error()})
 	} else {
-		log.Println(user)
-
 		c.JSON(http.StatusOK, user)
 	}
 }

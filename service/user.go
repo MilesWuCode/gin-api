@@ -3,7 +3,6 @@ package service
 import (
 	"gin-test/database"
 	"gin-test/model"
-	// "github.com/gin-gonic/gin"
 )
 
 type UserService struct{}
@@ -13,17 +12,18 @@ type UserService struct{}
 func (service UserService) All() ([]model.User, error) {
 	db := database.GetDB()
 
-	var userData []model.User
+	var user []model.User
 
+	// 預載入
 	// if err := db.Preload("Books").Find(&userData).Error; err != nil {
 	// 	return nil, err
 	// }
 
-	if err := db.Find(&userData).Error; err != nil {
+	if err := db.Find(&user).Error; err != nil {
 		return nil, err
 	}
 
-	return userData, nil
+	return user, nil
 }
 
 // func (service UserService) Get(id string) (User, error) {
