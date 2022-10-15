@@ -41,6 +41,7 @@ func Router() *gin.Engine {
 	{
 		user.GET("/", userController.List)
 		user.POST("/", userController.Create)
+		user.DELETE("/:id", userController.Delete)
 	}
 
 	postController := controller.PostController{}

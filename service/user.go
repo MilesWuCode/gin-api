@@ -66,14 +66,19 @@ func (service UserService) Create(user *model.User) error {
 // 	return userData, nil
 // }
 
-// func (service UserService) Delete(id string) error {
-// 	db := database.GetDB()
+func (service UserService) Delete(id string) error {
+	db := database.GetDB()
 
-// 	var userData User
+	var user model.User
 
-// 	if err := db.Where("id = ?", id).Delete(&userData).Error; err != nil {
-// 		return err
-// 	}
+	if err := db.Where("id = ?", id).First(&user).Error; err != nil {
+		return err
+		// return errors.New("User not found")
+	}
 
-// 	return nil
-// }
+	if err := db.Delete(&user).Error; err != nil {
+		return err
+	}
+
+	return nil
+}

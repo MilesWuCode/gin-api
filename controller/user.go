@@ -29,6 +29,8 @@ func (ctrl *UserController) List(c *gin.Context) {
 	c.ShouldBind(&p)
 
 	if list, err := userService.List(p); err != nil {
+		logger.Error("userService.List(p)", zap.String("err", err.Error()))
+
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 	} else {
 		c.JSON(http.StatusOK, gin.H{"data": list})
@@ -61,10 +63,25 @@ func (ctrl *UserController) Create(c *gin.Context) {
 	var userService service.UserService
 
 	if err := userService.Create(&user); err != nil {
-		logger.Error("userService.Create", zap.String("err", err.Error()))
+		logger.Error("userService.Create(&user)", zap.String("err", err.Error()))
 
 		c.JSON(http.StatusConflict, gin.H{"error": err.Error()})
 	} else {
 		c.JSON(http.StatusOK, gin.H{"data": user})
+	}
+}
+
+func (ctrl *UserController) Delete(c *gin.Context) {
+	// Parameters in path
+	id := c.Param("id")
+
+	var userService service.UserService
+
+	if err := userService.Delete(id); err != nil {
+		logger.Error("userService.Delete(id)", zap.String("err", err.Error()))
+
+		c.JSON(http.StatusConflict, gin.H{"error": err.Error()})
+	} else {
+		c.AbortWithStatus(http.StatusNoContent)
 	}
 }
