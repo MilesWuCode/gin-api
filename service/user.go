@@ -3,21 +3,23 @@ package service
 import (
 	"gin-test/database"
 	"gin-test/model"
+	"gin-test/plugin"
 )
 
 type UserService struct{}
 
-func (service UserService) All() ([]model.User, error) {
+func (service UserService) List(p plugin.Pagination) ([]model.User, error) {
 	db := database.GetDB()
 
 	var user []model.User
 
-	// 預載入
-	// if err := db.Preload("Books").Find(&userData).Error; err != nil {
-	// 	return nil, err
-	// }
+	limit, offset, err := p.Ready()
 
-	if err := db.Find(&user).Error; err != nil {
+	if err != nil {
+		return user, err
+	}
+
+	if err := db.Debug().Limit(limit).Offset(offset).Find(&user).Error; err != nil {
 		return nil, err
 	}
 

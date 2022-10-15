@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"fmt"
 	"gin-test/model"
 	"gin-test/plugin"
 	"gin-test/service"
@@ -14,32 +13,26 @@ var logger *zap.Logger
 
 func init() {
 	// Log
-	var logger = plugin.Log()
+	logger = plugin.Log()
 
 	defer logger.Sync()
 }
 
 type UserController struct{}
 
-type Pagination struct {
-	Page  int `form:"page" default:1`
-	Limit int `form:"limit" default:10`
-}
-
 func (ctrl *UserController) List(c *gin.Context) {
 	var userService service.UserService
 
-	var p Pagination
+	// 預設值
+	p := plugin.Pagination{Page: 1, Size: 3}
 
 	// Bind query string or post data
 	c.ShouldBind(&p)
 
-	fmt.Printf("%+v", p)
-
-	if list, err := userService.All(); err != nil {
+	if list, err := userService.List(p); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 	} else {
-		c.JSON(http.StatusOK, list)
+		c.JSON(http.StatusOK, gin.H{"data": list})
 	}
 }
 
@@ -73,6 +66,6 @@ func (ctrl *UserController) Create(c *gin.Context) {
 
 		c.JSON(http.StatusConflict, gin.H{"error": err.Error()})
 	} else {
-		c.JSON(http.StatusOK, user)
+		c.JSON(http.StatusOK, gin.H{"data": user})
 	}
 }
