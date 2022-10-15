@@ -12,7 +12,6 @@ import (
 var logger *zap.Logger
 
 func init() {
-	// Log
 	logger = plugin.Log()
 
 	defer logger.Sync()
