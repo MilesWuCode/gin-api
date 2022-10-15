@@ -26,26 +26,24 @@ func (service UserService) List(p plugin.Pagination) ([]model.User, error) {
 	return user, nil
 }
 
-// func (service UserService) Get(id string) (User, error) {
-// 	db := database.GetDB()
-
-// 	var userData User
-
-// 	if err := db.Preload("Books").Where("id = ?", id).First(&userData).Error; err != nil {
-// 		return userData, err
-// 	}
-
-// 	return userData, nil
-// }
-
 func (service UserService) Create(user *model.User) error {
 	db := database.GetDB()
 
 	if err := db.Create(&user).Error; err != nil {
 		return err
-	} else {
-		return nil
 	}
+
+	return nil
+}
+
+func (service UserService) Get(id string, user *model.User) error {
+	db := database.GetDB()
+
+	if err := db.Where("id = ?", id).First(&user).Error; err != nil {
+		return err
+	}
+
+	return nil
 }
 
 // func (service UserService) Update(id string, c *gin.Context) (User, error) {
@@ -71,11 +69,21 @@ func (service UserService) Delete(id string) error {
 
 	var user model.User
 
+	// 使用Unscoped()查詢所有資料
+	// 範例 db.Unscoped().Where("age = 20").Find(&users)
+	// 執行 SELECT * FROM users WHERE age = 20;
+
+	// 若有deleted_at則scope查詢
 	if err := db.Where("id = ?", id).First(&user).Error; err != nil {
 		return err
 		// return errors.New("User not found")
 	}
 
+	// 永久刪除
+	// 範例 db.Unscoped().Delete(&order)
+	// 執行 DELETE FROM orders WHERE id=10;
+
+	// 若有deleted_at則軟刪除
 	if err := db.Delete(&user).Error; err != nil {
 		return err
 	}

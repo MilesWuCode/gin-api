@@ -41,6 +41,7 @@ func Router() *gin.Engine {
 	{
 		user.GET("/", userController.List)
 		user.POST("/", userController.Create)
+		user.GET("/:id", userController.Get)
 		user.DELETE("/:id", userController.Delete)
 	}
 

@@ -71,6 +71,23 @@ func (ctrl *UserController) Create(c *gin.Context) {
 	}
 }
 
+func (ctrl *UserController) Get(c *gin.Context) {
+	// Parameters in path
+	id := c.Param("id")
+
+	var userService service.UserService
+
+	var user model.User
+
+	if err := userService.Get(id, &user); err != nil {
+		logger.Error("userService.Get(id)", zap.String("err", err.Error()))
+
+		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+	} else {
+		c.JSON(http.StatusOK, gin.H{"data": &user})
+	}
+}
+
 func (ctrl *UserController) Delete(c *gin.Context) {
 	// Parameters in path
 	id := c.Param("id")
