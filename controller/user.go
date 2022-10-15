@@ -7,6 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 	"net/http"
+	"reflect"
 )
 
 var logger *zap.Logger
@@ -84,7 +85,46 @@ func (ctrl *UserController) Get(c *gin.Context) {
 
 		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
 	} else {
-		c.JSON(http.StatusOK, gin.H{"data": &user})
+		c.JSON(http.StatusOK, gin.H{"data": user})
+	}
+}
+
+func (ctrl *UserController) Update(c *gin.Context) {
+	type UpdateData struct {
+		Name string `json:"name" form:"name" validate:"required,max=20" label:"名稱"`
+	}
+
+	// Parameters in path
+	id := c.Param("id")
+
+	var userService service.UserService
+
+	var data UpdateData
+
+	c.ShouldBind(&data)
+
+	if err := plugin.Validate(data); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err})
+
+		return
+	}
+
+	// struct to map
+	s := make(map[string]interface{})
+	values := reflect.ValueOf(data)
+	typesOf := values.Type()
+	for i := 0; i < values.NumField(); i++ {
+		s[typesOf.Field(i).Name] = values.Field(i).Interface()
+	}
+
+	var user model.User
+
+	if err := userService.Update(id, s, &user); err != nil {
+		logger.Error("userService.Update(id, &updateUser)", zap.String("err", err.Error()))
+
+		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+	} else {
+		c.JSON(http.StatusOK, gin.H{"data": user})
 	}
 }
 

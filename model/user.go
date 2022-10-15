@@ -15,9 +15,9 @@ type User struct {
 	Password string `gorm:"not null" form:"password" json:"password" binding:"required" validate:"required" label:"密碼"`
 
 	// gorm.model
-	CreatedAt time.Time      `json:"created_at" label:"帳號"`
-	UpdatedAt time.Time      `json:"updated_at" label:"帳號"`
-	DeletedAt gorm.DeletedAt `gorm:"index" json:"deleted_at" label:"帳號"`
+	CreatedAt time.Time      `json:"created_at" label:"建立時間"`
+	UpdatedAt time.Time      `json:"updated_at" label:"更新時間"`
+	DeletedAt gorm.DeletedAt `gorm:"index" json:"deleted_at" label:"刪除時間"`
 
 	// relationships
 	// Posts    []Post `gorm:"foreignkey:UserID"`

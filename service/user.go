@@ -46,23 +46,19 @@ func (service UserService) Get(id string, user *model.User) error {
 	return nil
 }
 
-// func (service UserService) Update(id string, c *gin.Context) (User, error) {
-// 	db := database.GetDB()
+func (service UserService) Update(id string, data map[string]interface{}, user *model.User) error {
+	db := database.GetDB()
 
-// 	var userData User
+	if err := db.Debug().Where("id = ?", id).First(&user).Error; err != nil {
+		return err
+	}
 
-// 	if err := db.Where("id = ?", id).First(&userData).Error; err != nil {
-// 		return userData, err
-// 	}
+	if err := db.Model(&user).Updates(data).Error; err != nil {
+		return err
+	}
 
-// 	if err := c.Bind(&userData); err != nil {
-// 		return userData, err
-// 	}
-
-// 	db.Save(&userData)
-
-// 	return userData, nil
-// }
+	return nil
+}
 
 func (service UserService) Delete(id string) error {
 	db := database.GetDB()
@@ -76,7 +72,6 @@ func (service UserService) Delete(id string) error {
 	// 若有deleted_at則scope查詢
 	if err := db.Where("id = ?", id).First(&user).Error; err != nil {
 		return err
-		// return errors.New("User not found")
 	}
 
 	// 永久刪除
