@@ -1,2 +1,0 @@
-{"level":"info","ts":1665762090.6566663,"msg":"user","user.id":"0","user.name":"abc"}
-{"level":"warn","ts":1665762090.6573102,"msg":"userService.Create","err":"UNIQUE constraint failed: users.email"}

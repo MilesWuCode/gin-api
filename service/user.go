@@ -7,8 +7,6 @@ import (
 
 type UserService struct{}
 
-// type User model.User
-
 func (service UserService) All() ([]model.User, error) {
 	db := database.GetDB()
 
