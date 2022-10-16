@@ -22,3 +22,6 @@
 
 - s3
     - https://github.com/minio/minio-go
+
+- cache (route, query, ...etc)
+    - https://github.com/gin-contrib/cache

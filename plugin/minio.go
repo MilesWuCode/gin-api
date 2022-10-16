@@ -8,20 +8,23 @@ import (
 	"github.com/spf13/viper"
 )
 
-func InitMinio() {
-	endpoint := "minio-console.miles-home.cc"
-	accessKeyID := "Q3AM3UQ867SPQQA43P2F"
-	secretAccessKey := "zuf+tfteSlswRu7BJ86wekitnifILbZam1KYY3TG"
+func InitMinio() *minio.Client {
+	endpoint := viper.GetString("minio.endpoint")
+	accessKey := viper.GetString("minio.accessKey")
+	secretKey := viper.GetString("minio.secretKey")
 	useSSL := true
 
 	// Initialize minio client object.
 	minioClient, err := minio.New(endpoint, &minio.Options{
-		Creds:  credentials.NewStaticV4(accessKeyID, secretAccessKey, ""),
+		Creds:  credentials.NewStaticV4(accessKey, secretKey, ""),
 		Secure: useSSL,
 	})
+
 	if err != nil {
 		log.Fatalln(err)
 	}
 
 	log.Printf("%#v\n", minioClient) // minioClient is now set up
+
+	return minioClient
 }
