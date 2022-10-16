@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"fmt"
 	"gin-test/model"
 	"gin-test/plugin"
 	"gin-test/service"
@@ -13,7 +14,7 @@ import (
 var logger *zap.Logger
 
 func init() {
-	logger = plugin.Log()
+	logger = plugin.InitLog()
 
 	defer logger.Sync()
 }
@@ -141,4 +142,11 @@ func (ctrl *UserController) Delete(c *gin.Context) {
 	} else {
 		c.AbortWithStatus(http.StatusNoContent)
 	}
+}
+
+func (ctrl *UserController) UploadAvatar(c *gin.Context) {
+	// Parameters in path
+	id := c.Param("id")
+
+	fmt.Println("id", id)
 }

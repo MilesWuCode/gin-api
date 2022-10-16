@@ -6,7 +6,7 @@ import (
 	"go.uber.org/zap/zapcore"
 )
 
-func Log() *zap.Logger {
+func InitLog() *zap.Logger {
 	w := zapcore.AddSync(&lumberjack.Logger{
 		Filename:   "./log/app.log",
 		MaxSize:    20, // megabytes
@@ -26,7 +26,7 @@ func Log() *zap.Logger {
 
 	// 範例
 	// func init() {
-	// 	logger = plugin.Log()
+	// 	logger = plugin.InitLog()
 	// 	defer logger.Sync()
 	//  logger.Info("userService.Create", zap.String("user.id", strconv.FormatUint(uint64(user.ID), 10)), zap.String("user.name", user.Name))
 	// }
