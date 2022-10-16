@@ -8,7 +8,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 	"net/http"
-	"reflect"
 )
 
 var logger *zap.Logger
@@ -110,17 +109,11 @@ func (ctrl *UserController) Update(c *gin.Context) {
 		return
 	}
 
-	// struct to map
-	s := make(map[string]interface{})
-	values := reflect.ValueOf(data)
-	typesOf := values.Type()
-	for i := 0; i < values.NumField(); i++ {
-		s[typesOf.Field(i).Name] = values.Field(i).Interface()
-	}
+	dataMap := plugin.StructToMapString(data)
 
 	var user model.User
 
-	if err := userService.Update(id, s, &user); err != nil {
+	if err := userService.Update(id, dataMap, &user); err != nil {
 		logger.Error("userService.Update(id, &updateUser)", zap.String("err", err.Error()))
 
 		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
@@ -148,5 +141,8 @@ func (ctrl *UserController) UploadAvatar(c *gin.Context) {
 	// Parameters in path
 	id := c.Param("id")
 
-	fmt.Println("id", id)
+	file, _ := c.FormFile("file")
+
+	fmt.Println("id", id, file)
+
 }

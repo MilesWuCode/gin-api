@@ -1,0 +1,6 @@
+gin:
+  port: 8081
+minio:
+  endpoint:
+  accessKey:
+  secretKey:

@@ -4,6 +4,8 @@
 
 - framework
     - https://github.com/gin-gonic/gin
+    - https://github.com/kataras/iris - interest
+    - https://github.com/go-chi/chi - interest
 
 - database
     - https://github.com/go-gorm/gorm

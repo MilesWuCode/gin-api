@@ -35,6 +35,9 @@ func Router() *gin.Engine {
 	// router.SetTrustedProxies([]string{"x.x.x.x"})
 	router.SetTrustedProxies(nil)
 
+	// Set a lower memory limit for multipart forms (default is 32 MiB)
+	router.MaxMultipartMemory = 8 << 20 // 8 MiB
+
 	userController := controller.UserController{}
 
 	user := router.Group("/user")
@@ -44,6 +47,7 @@ func Router() *gin.Engine {
 		user.GET("/:id", userController.Get)
 		user.PUT("/:id", userController.Update)
 		user.DELETE("/:id", userController.Delete)
+		user.POST("/:id/avatar", userController.UploadAvatar)
 	}
 
 	postController := controller.PostController{}
