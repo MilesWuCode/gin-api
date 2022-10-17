@@ -11,6 +11,7 @@ import (
 	"go.uber.org/zap"
 	"log"
 	"net/http"
+	"path/filepath"
 )
 
 var logger *zap.Logger
@@ -146,14 +147,14 @@ func (ctrl *UserController) UploadAvatar(c *gin.Context) {
 
 	file, _ := c.FormFile("file")
 
-	objectName := file.Filename
-	filePath := "/tmp/" + file.Filename
+	objectName := plugin.StringRand(32) + filepath.Ext(file.Filename)
+	filePath := "/tmp/" + objectName
 	contentType := file.Header.Get("Content-Type")
 	bucketName := "gin-api"
 
 	c.SaveUploadedFile(file, filePath)
 
-	// fmt.Println(id, objectName, contentType, file.Size)
+	fmt.Println(id, objectName, contentType, file.Size)
 
 	minioClient := plugin.InitMinio()
 
@@ -163,10 +164,12 @@ func (ctrl *UserController) UploadAvatar(c *gin.Context) {
 	info, err := minioClient.FPutObject(ctx, bucketName, objectName, filePath, minio.PutObjectOptions{ContentType: contentType})
 
 	if err != nil {
-		fmt.Printf("%v", err)
+		c.JSON(http.StatusBadRequest, gin.H{"error": "file upload error"})
+
+		return
 	}
 
-	log.Printf("Successfully uploaded %s of size %d\n", objectName, info.Size)
+	log.Printf("Successfully uploaded %s of size %d\n", info.Filename, info.Size)
 
-	c.JSON(http.StatusOK, gin.H{"data": file})
+	c.JSON(http.StatusOK, gin.H{"data": contentType})
 }

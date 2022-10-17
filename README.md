@@ -27,3 +27,7 @@
 
 - cache (route, query, ...etc)
     - https://github.com/gin-contrib/cache
+
+- dependency injection
+    - https://github.com/google/wire
+    - https://github.com/uber-go/dig - refer

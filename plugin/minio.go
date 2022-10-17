@@ -28,3 +28,4 @@ func InitMinio() *minio.Client {
 
 	return minioClient
 }
+
