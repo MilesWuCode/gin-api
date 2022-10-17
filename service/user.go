@@ -1,9 +1,9 @@
 package service
 
 import (
-	"gin-test/database"
-	"gin-test/model"
-	"gin-test/plugin"
+	"gin-api/database"
+	"gin-api/model"
+	"gin-api/plugin"
 )
 
 type UserService struct{}

@@ -20,8 +20,10 @@
 - validator
     -https://github.com/go-playground/validator
 
-- s3
+- file-store
     - https://github.com/minio/minio-go
+    - https://github.com/spf13/afero
+    - https://github.com/aws/aws-sdk-go
 
 - cache (route, query, ...etc)
     - https://github.com/gin-contrib/cache

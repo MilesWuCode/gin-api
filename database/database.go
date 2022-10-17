@@ -1,7 +1,7 @@
 package database
 
 import (
-	"gin-test/model"
+	"gin-api/model"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 	"time"

@@ -3,9 +3,9 @@ package controller
 import (
 	"context"
 	"fmt"
-	"gin-test/model"
-	"gin-test/plugin"
-	"gin-test/service"
+	"gin-api/model"
+	"gin-api/plugin"
+	"gin-api/service"
 	"github.com/gin-gonic/gin"
 	"github.com/minio/minio-go/v7"
 	"go.uber.org/zap"

@@ -1,4 +1,4 @@
-module gin-test
+module gin-api
 
 go 1.19
 
