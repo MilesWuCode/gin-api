@@ -148,22 +148,24 @@ func (ctrl *UserController) UploadAvatar(c *gin.Context) {
 
 	objectName := file.Filename
 	filePath := "/tmp/" + file.Filename
-	contentType := "application/json"
-	size := file.Size
+	contentType := file.Header.Get("Content-Type")
 	bucketName := "gin-api"
 
 	c.SaveUploadedFile(file, filePath)
 
-	fmt.Println(id, objectName, contentType, size, file.Header)
+	// fmt.Println(id, objectName, contentType, file.Size)
 
 	minioClient := plugin.InitMinio()
+
 	ctx := context.Background()
+
 	// Upload the zip file with FPutObject
 	info, err := minioClient.FPutObject(ctx, bucketName, objectName, filePath, minio.PutObjectOptions{ContentType: contentType})
 
 	if err != nil {
 		fmt.Printf("%v", err)
 	}
+
 	log.Printf("Successfully uploaded %s of size %d\n", objectName, info.Size)
 
 	c.JSON(http.StatusOK, gin.H{"data": file})
