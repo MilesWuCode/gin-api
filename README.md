@@ -9,6 +9,9 @@
 
 - database
     - https://github.com/go-gorm/gorm
+    - https://github.com/go-gorm/dbresolver
+    - https://github.com/go-gorm/mysql
+    - https://github.com/go-gorm/sqlite
 
 - log
     - https://github.com/uber-go/zap
