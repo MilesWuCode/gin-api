@@ -31,6 +31,7 @@
 
 - cache (route, query, ...etc)
     - https://github.com/gin-contrib/cache
+    - https://github.com/chenyahui/gin-cache - refer
 
 - dependency injection
     - https://github.com/google/wire - refer

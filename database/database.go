@@ -2,9 +2,10 @@ package database
 
 import (
 	"gin-api/model"
+
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
-	// "gorm.io/plugin/dbresolver"
+
 	"time"
 )
 
@@ -28,7 +29,11 @@ func init() {
 	// 	// use `db6`, `db7` as sources, `db8` as replicas for `orders`, `Product`
 	// 	Sources:  []gorm.Dialector{mysql.Open("db6_dsn"), mysql.Open("db7_dsn")},
 	// 	Replicas: []gorm.Dialector{mysql.Open("db8_dsn")},
-	// }, "orders", &Product{}, "secondary"))
+	// }, "orders", &Product{}, "secondary").
+	// 	SetConnMaxIdleTime(time.Hour).
+	// 	SetConnMaxLifetime(24 * time.Hour).
+	// 	SetMaxIdleConns(100).
+	// 	SetMaxOpenConns(200))
 
 	if err != nil {
 		panic("gorm.Open()" + err.Error())
@@ -40,9 +45,10 @@ func init() {
 		panic("db.DB()" + err.Error())
 	}
 
-	sqlDB.SetMaxIdleConns(20)
+	sqlDB.SetMaxIdleConns(10)
 	sqlDB.SetMaxOpenConns(100)
 	sqlDB.SetConnMaxLifetime(time.Hour)
+	sqlDB.SetConnMaxIdleTime(2 * time.Hour)
 }
 
 func GetDB() *gorm.DB {

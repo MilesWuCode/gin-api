@@ -6,11 +6,12 @@ import (
 	"gin-api/model"
 	"gin-api/plugin"
 	"gin-api/service"
+	"net/http"
+	"path/filepath"
+
 	"github.com/gin-gonic/gin"
 	"github.com/minio/minio-go/v7"
 	"go.uber.org/zap"
-	"net/http"
-	"path/filepath"
 )
 
 var logger *zap.Logger
@@ -24,6 +25,9 @@ func init() {
 type UserController struct{}
 
 func (ctrl *UserController) List(c *gin.Context) {
+	// path
+	fmt.Println(c.Request.URL.RequestURI())
+
 	var userService service.UserService
 
 	// 預設值
@@ -76,6 +80,9 @@ func (ctrl *UserController) Create(c *gin.Context) {
 }
 
 func (ctrl *UserController) Get(c *gin.Context) {
+	// path
+	fmt.Println(c.Request.URL.Path)
+
 	// Parameters in path
 	id := c.Param("id")
 
@@ -93,6 +100,10 @@ func (ctrl *UserController) Get(c *gin.Context) {
 }
 
 func (ctrl *UserController) Update(c *gin.Context) {
+	// path
+	fmt.Println(c.Request.URL.Path)
+
+	// form
 	type UpdateData struct {
 		Name string `json:"name" form:"name" validate:"required,max=20" label:"名稱"`
 	}

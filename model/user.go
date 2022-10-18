@@ -1,8 +1,10 @@
 package model
 
 import (
-	"gorm.io/gorm"
+	"log"
 	"time"
+
+	"gorm.io/gorm"
 )
 
 type User struct {
@@ -25,4 +27,16 @@ type User struct {
 
 func (t User) TableName() string {
 	return "users"
+}
+
+// BeforeSave, BeforeUpdate, AfterSave, AfterUpdate
+
+func (t *User) AfterUpdate(tx *gorm.DB) (err error) {
+	// if t.Role == "admin" {
+	// 	return errors.New("admin user not allowed to update")
+	// }
+
+	log.Println("User.AfterUpdate")
+
+	return
 }
