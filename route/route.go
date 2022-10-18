@@ -2,9 +2,12 @@ package route
 
 import (
 	"gin-api/controller"
+	"github.com/gin-contrib/cache"
+	"github.com/gin-contrib/cache/persistence"
 	"github.com/gin-gonic/gin"
 	"io"
 	"os"
+	"time"
 )
 
 func Router() *gin.Engine {
@@ -38,11 +41,14 @@ func Router() *gin.Engine {
 	// Set a lower memory limit for multipart forms (default is 32 MiB)
 	router.MaxMultipartMemory = 8 << 20 // 8 MiB
 
+	// cache
+	store := persistence.NewInMemoryStore(time.Second)
+
 	userController := controller.UserController{}
 
 	user := router.Group("/user")
 	{
-		user.GET("/", userController.List)
+		user.GET("/", cache.CachePage(store, time.Minute, userController.List))
 		user.POST("/", userController.Create)
 		user.GET("/:id", userController.Get)
 		user.PUT("/:id", userController.Update)

@@ -20,14 +20,21 @@
 - validator
     -https://github.com/go-playground/validator
 
-- file-store
-    - https://github.com/minio/minio-go
+- storage
     - https://github.com/spf13/afero
+    - https://github.com/minio/minio-go
+    - https://github.com/googleapis/google-cloud-go
     - https://github.com/aws/aws-sdk-go
 
 - cache (route, query, ...etc)
     - https://github.com/gin-contrib/cache
 
 - dependency injection
-    - https://github.com/google/wire
+    - https://github.com/google/wire - refer
     - https://github.com/uber-go/dig - refer
+
+- jwt
+    - https://github.com/golang-jwt/jwt
+
+- auth
+    - https://github.com/volatiletech/authboss - refer

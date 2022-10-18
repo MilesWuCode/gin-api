@@ -9,7 +9,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/minio/minio-go/v7"
 	"go.uber.org/zap"
-	"log"
 	"net/http"
 	"path/filepath"
 )
@@ -147,14 +146,17 @@ func (ctrl *UserController) UploadAvatar(c *gin.Context) {
 
 	file, _ := c.FormFile("file")
 
-	objectName := plugin.StringRand(32) + filepath.Ext(file.Filename)
-	filePath := "/tmp/" + objectName
+	fileName := plugin.StringRand(32) + filepath.Ext(file.Filename)
+	filePath := "/tmp/" + fileName
+	objectName := "/" + id + "/" + fileName
 	contentType := file.Header.Get("Content-Type")
 	bucketName := "gin-api"
 
-	c.SaveUploadedFile(file, filePath)
+	if err := c.SaveUploadedFile(file, filePath); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err})
 
-	fmt.Println(id, objectName, contentType, file.Size)
+		return
+	}
 
 	minioClient := plugin.InitMinio()
 
@@ -169,7 +171,19 @@ func (ctrl *UserController) UploadAvatar(c *gin.Context) {
 		return
 	}
 
-	log.Printf("Successfully uploaded %s of size %d\n", info.Filename, info.Size)
+	type UploadFile struct {
+		Name        string `json:"name"`
+		Size        int64  `json:"size"`
+		Path        string `json:"path"`
+		ContentType string `json:"contentType"`
+	}
 
-	c.JSON(http.StatusOK, gin.H{"data": contentType})
+	uploadFile := UploadFile{
+		Name:        file.Filename,
+		Size:        info.Size,
+		Path:        fmt.Sprintf("/%s/%s/%s", bucketName, id, fileName),
+		ContentType: contentType,
+	}
+
+	c.JSON(http.StatusOK, gin.H{"data": uploadFile})
 }

@@ -24,8 +24,5 @@ func InitMinio() *minio.Client {
 		log.Fatalln(err)
 	}
 
-	log.Printf("%#v\n", minioClient) // minioClient is now set up
-
 	return minioClient
 }
-
