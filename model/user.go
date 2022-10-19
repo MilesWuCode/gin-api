@@ -2,34 +2,29 @@ package model
 
 import (
 	"log"
-	"time"
 
 	"gorm.io/gorm"
 )
 
 type User struct {
-	// gorm.model
-	ID uint `gorm:"primarykey" json:"id"`
+	// gorm field
+	gorm.Model
 
-	// custom
-	Name     string `gorm:"not null" form:"name" json:"name" binding:"required" validate:"required" label:"名稱"`
-	Email    string `gorm:"unique;not null" form:"email" json:"email" binding:"required" validate:"required,email" label:"帳號"`
-	Password string `gorm:"not null" form:"password" json:"password" binding:"required" validate:"required" label:"密碼"`
-
-	// gorm.model
-	CreatedAt time.Time      `json:"created_at" label:"建立時間"`
-	UpdatedAt time.Time      `json:"updated_at" label:"更新時間"`
-	DeletedAt gorm.DeletedAt `gorm:"index" json:"deleted_at" label:"刪除時間"`
+	// custom field
+	Name     string `gorm:"not null" json:"name" binding:"required"`
+	Email    string `gorm:"unique;not null" json:"email" binding:"required"`
+	Password string `gorm:"not null" json:"password" binding:"required"`
 
 	// relationships
 	// Posts    []Post `gorm:"foreignkey:UserID"`
 }
 
+// table name
 func (t User) TableName() string {
 	return "users"
 }
 
-// BeforeSave, BeforeUpdate, AfterSave, AfterUpdate
+// events:BeforeSave, BeforeUpdate, AfterSave, AfterUpdate
 
 func (t *User) AfterUpdate(tx *gorm.DB) (err error) {
 	// if t.Role == "admin" {

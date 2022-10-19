@@ -46,13 +46,20 @@ func (ctrl *UserController) List(c *gin.Context) {
 }
 
 func (ctrl *UserController) Create(c *gin.Context) {
-	var user model.User
+	// form
+	type CreateData struct {
+		Name     string `form:"name" json:"name" validate:"required,max=20" label:"名稱"`
+		Email    string `form:"email" json:"email" validate:"required,email" label:"帳號"`
+		Password string `form:"password" json:"password" validate:"required" label:"密碼"`
+	}
+
+	var data CreateData
 
 	// Bind form-data request
 	// c.Bind(&user)
 
 	// Bind query string or post data
-	c.ShouldBind(&user)
+	c.ShouldBind(&data)
 
 	// 回傳簡單錯誤,gin預設
 	// if err := c.ShouldBind(&user); err != nil {
@@ -62,13 +69,20 @@ func (ctrl *UserController) Create(c *gin.Context) {
 	// }
 
 	// 回傳複雜錯誤,validator套件
-	if err := plugin.Validate(user); err != nil {
+	if err := plugin.Validate(data); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err})
 
 		return
 	}
 
 	var userService service.UserService
+
+	var user model.User
+
+	// 表單值,key-value,複雜需要做客制代碼
+	user.Name = data.Name
+	user.Email = data.Email
+	user.Password = data.Password
 
 	if err := userService.Create(&user); err != nil {
 		logger.Error("userService.Create(&user)", zap.String("err", err.Error()))
@@ -111,8 +125,6 @@ func (ctrl *UserController) Update(c *gin.Context) {
 	// Parameters in path
 	id := c.Param("id")
 
-	var userService service.UserService
-
 	var data UpdateData
 
 	c.ShouldBind(&data)
@@ -123,7 +135,10 @@ func (ctrl *UserController) Update(c *gin.Context) {
 		return
 	}
 
+	// 表單值,key-value,複雜需要做客制代碼
 	dataMap := plugin.StructToMapString(data)
+
+	var userService service.UserService
 
 	var user model.User
 
