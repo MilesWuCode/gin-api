@@ -1,34 +1,36 @@
-package controller
+package user
 
 import (
 	"context"
 	"fmt"
-	"gin-api/model"
 	"gin-api/plugin"
-	"gin-api/service"
+	"log"
 	"net/http"
 	"path/filepath"
 
 	"github.com/gin-gonic/gin"
-	"github.com/minio/minio-go/v7"
 	"go.uber.org/zap"
+
+	"github.com/minio/minio-go/v7"
 )
+
+type Controller struct{}
 
 var logger *zap.Logger
 
 func init() {
+	log.Println("user.controller.init")
+
 	logger = plugin.InitLog()
 
 	defer logger.Sync()
 }
 
-type UserController struct{}
-
-func (ctrl *UserController) List(c *gin.Context) {
+func (ctrl *Controller) List(c *gin.Context) {
 	// path
 	fmt.Println(c.Request.URL.RequestURI())
 
-	var userService service.UserService
+	var userService UserService
 
 	// 預設值
 	p := plugin.Pagination{Page: 1, Size: 3}
@@ -45,7 +47,7 @@ func (ctrl *UserController) List(c *gin.Context) {
 	}
 }
 
-func (ctrl *UserController) Create(c *gin.Context) {
+func (ctrl *Controller) Create(c *gin.Context) {
 	// form
 	type CreateData struct {
 		Name     string `form:"name" json:"name" validate:"required,max=20" label:"名稱"`
@@ -75,9 +77,9 @@ func (ctrl *UserController) Create(c *gin.Context) {
 		return
 	}
 
-	var userService service.UserService
+	var userService UserService
 
-	var user model.User
+	var user UserModel
 
 	// 表單值,key-value,複雜需要做客制代碼
 	user.Name = data.Name
@@ -93,16 +95,16 @@ func (ctrl *UserController) Create(c *gin.Context) {
 	}
 }
 
-func (ctrl *UserController) Get(c *gin.Context) {
+func (ctrl *Controller) Get(c *gin.Context) {
 	// path
 	fmt.Println(c.Request.URL.Path)
 
 	// Parameters in path
 	id := c.Param("id")
 
-	var userService service.UserService
+	var userService UserService
 
-	var user model.User
+	var user UserModel
 
 	if err := userService.Get(id, &user); err != nil {
 		logger.Error("userService.Get(id)", zap.String("err", err.Error()))
@@ -113,7 +115,7 @@ func (ctrl *UserController) Get(c *gin.Context) {
 	}
 }
 
-func (ctrl *UserController) Update(c *gin.Context) {
+func (ctrl *Controller) Update(c *gin.Context) {
 	// path
 	fmt.Println(c.Request.URL.Path)
 
@@ -138,9 +140,9 @@ func (ctrl *UserController) Update(c *gin.Context) {
 	// 表單值,key-value,複雜需要做客制代碼
 	dataMap := plugin.StructToMapString(data)
 
-	var userService service.UserService
+	var userService UserService
 
-	var user model.User
+	var user UserModel
 
 	if err := userService.Update(id, dataMap, &user); err != nil {
 		logger.Error("userService.Update(id, &updateUser)", zap.String("err", err.Error()))
@@ -151,11 +153,11 @@ func (ctrl *UserController) Update(c *gin.Context) {
 	}
 }
 
-func (ctrl *UserController) Delete(c *gin.Context) {
+func (ctrl *Controller) Delete(c *gin.Context) {
 	// Parameters in path
 	id := c.Param("id")
 
-	var userService service.UserService
+	var userService UserService
 
 	if err := userService.Delete(id); err != nil {
 		logger.Error("userService.Delete(id)", zap.String("err", err.Error()))
@@ -166,7 +168,7 @@ func (ctrl *UserController) Delete(c *gin.Context) {
 	}
 }
 
-func (ctrl *UserController) UploadAvatar(c *gin.Context) {
+func (ctrl *Controller) UploadAvatar(c *gin.Context) {
 	// Parameters in path
 	id := c.Param("id")
 
