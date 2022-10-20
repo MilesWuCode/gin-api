@@ -21,7 +21,7 @@ func (ctrl *Controller) List(c *gin.Context) {
 	// path
 	fmt.Println(c.Request.URL.RequestURI())
 
-	var userService UserService
+	var service Service
 
 	// 預設值
 	p := plugin.Pagination{Page: 1, Size: 3}
@@ -29,7 +29,7 @@ func (ctrl *Controller) List(c *gin.Context) {
 	// Bind query string or post data
 	c.ShouldBind(&p)
 
-	if list, err := userService.List(p); err != nil {
+	if list, err := service.List(p); err != nil {
 		// Abort(), AbortWithStatusJSON() 不執行後面的middleware不執行
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 	} else {
@@ -67,7 +67,7 @@ func (ctrl *Controller) Create(c *gin.Context) {
 		return
 	}
 
-	var userService UserService
+	var service Service
 
 	var user model.User
 
@@ -79,11 +79,13 @@ func (ctrl *Controller) Create(c *gin.Context) {
 	if password, err := auth.SetPassword(data.Password); err != nil {
 		// Abort(), AbortWithStatusJSON() 不執行後面的middleware不執行
 		c.AbortWithStatusJSON(http.StatusConflict, gin.H{"error": err.Error()})
+
+		return
 	} else {
 		user.Password = password
 	}
 
-	if err := userService.Create(&user); err != nil {
+	if err := service.Create(&user); err != nil {
 		// Abort(), AbortWithStatusJSON() 不執行後面的middleware不執行
 		c.AbortWithStatusJSON(http.StatusConflict, gin.H{"error": err.Error()})
 	} else {
@@ -98,11 +100,11 @@ func (ctrl *Controller) Get(c *gin.Context) {
 	// Parameters in path
 	id := c.Param("id")
 
-	var userService UserService
+	var service Service
 
 	var user model.User
 
-	if err := userService.Get(id, &user); err != nil {
+	if err := service.Get(id, &user); err != nil {
 		// Abort(), AbortWithStatusJSON() 不執行後面的middleware不執行
 		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"error": err.Error()})
 	} else {
@@ -136,11 +138,11 @@ func (ctrl *Controller) Update(c *gin.Context) {
 	// 表單值,key-value,複雜需要做客制代碼
 	dataMap := plugin.StructToMapString(data)
 
-	var userService UserService
+	var service Service
 
 	var user model.User
 
-	if err := userService.Update(id, dataMap, &user); err != nil {
+	if err := service.Update(id, dataMap, &user); err != nil {
 		// Abort(), AbortWithStatusJSON() 不執行後面的middleware不執行
 		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"error": err.Error()})
 	} else {
@@ -152,9 +154,9 @@ func (ctrl *Controller) Delete(c *gin.Context) {
 	// Parameters in path
 	id := c.Param("id")
 
-	var userService UserService
+	var service Service
 
-	if err := userService.Delete(id); err != nil {
+	if err := service.Delete(id); err != nil {
 		// Abort(), AbortWithStatusJSON() 不執行後面的middleware不執行
 		c.AbortWithStatusJSON(http.StatusConflict, gin.H{"error": err.Error()})
 	} else {
@@ -167,6 +169,16 @@ func (ctrl *Controller) UploadAvatar(c *gin.Context) {
 	// Parameters in path
 	id := c.Param("id")
 
+	var user model.User
+
+	var service Service
+
+	if err := service.Get(id, &user); err != nil {
+		c.AbortWithStatusJSON(http.StatusConflict, gin.H{"error": err.Error()})
+
+		return
+	}
+
 	file, _ := c.FormFile("file")
 
 	fileName := plugin.StringRand(32) + filepath.Ext(file.Filename)
@@ -176,7 +188,7 @@ func (ctrl *Controller) UploadAvatar(c *gin.Context) {
 	bucketName := "gin-api"
 
 	if err := c.SaveUploadedFile(file, filePath); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err})
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err})
 
 		return
 	}
@@ -193,9 +205,9 @@ func (ctrl *Controller) UploadAvatar(c *gin.Context) {
 
 		defer logger.Sync()
 
-		logger.Error("userService.Delete(id)", zap.String("err", err.Error()))
+		logger.Error("service.Delete(id)", zap.String("err", err.Error()))
 
-		c.JSON(http.StatusBadRequest, gin.H{"error": "file upload error"})
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "file upload error"})
 
 		return
 	}
