@@ -10,9 +10,8 @@ import (
 	"path/filepath"
 
 	"github.com/gin-gonic/gin"
-	"go.uber.org/zap"
-
 	"github.com/minio/minio-go/v7"
+	"go.uber.org/zap"
 )
 
 type Controller struct{}
