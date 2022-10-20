@@ -215,6 +215,7 @@ func (ctrl *Controller) UploadAvatar(c *gin.Context) {
 		Name        string `json:"name"`
 		Size        int64  `json:"size"`
 		Path        string `json:"path"`
+		Url         string `json:"url"`
 		ContentType string `json:"contentType"`
 	}
 
@@ -222,6 +223,7 @@ func (ctrl *Controller) UploadAvatar(c *gin.Context) {
 		Name:        file.Filename,
 		Size:        info.Size,
 		Path:        fmt.Sprintf("/%s/%s/%s", bucketName, id, fileName),
+		Url:         fmt.Sprintf("%s/%s/%s/%s", "https://storage", bucketName, id, fileName),
 		ContentType: contentType,
 	}
 
