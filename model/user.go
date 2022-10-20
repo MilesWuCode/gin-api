@@ -15,9 +15,9 @@ type User struct {
 	DeletedAt gorm.DeletedAt `gorm:"index" json:"deleted_at"`
 
 	// 自訂義欄位
-	Name     string `gorm:"not null" json:"name" binding:"required"`
-	Email    string `gorm:"unique;not null" json:"email" binding:"required"`
-	Password string `gorm:"not null" json:"password" binding:"required"`
+	Name     string `gorm:"not null" json:"name"`
+	Email    string `gorm:"unique;not null" json:"email"`
+	Password string `gorm:"not null" json:"password"`
 
 	// 自訂義關聯
 	// Posts []Post `gorm:"foreignkey:UserID"`

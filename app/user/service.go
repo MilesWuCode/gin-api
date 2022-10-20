@@ -8,7 +8,7 @@ import (
 
 type UserService struct{}
 
-func (service UserService) List(p plugin.Pagination) ([]model.User, error) {
+func (service *UserService) List(p plugin.Pagination) ([]model.User, error) {
 	db := database.GetDB()
 
 	var user []model.User
@@ -26,7 +26,7 @@ func (service UserService) List(p plugin.Pagination) ([]model.User, error) {
 	return user, nil
 }
 
-func (service UserService) Create(user *model.User) error {
+func (service *UserService) Create(user *model.User) error {
 	db := database.GetDB()
 
 	if err := db.Debug().Create(&user).Error; err != nil {
@@ -36,7 +36,7 @@ func (service UserService) Create(user *model.User) error {
 	return nil
 }
 
-func (service UserService) Get(id string, user *model.User) error {
+func (service *UserService) Get(id string, user *model.User) error {
 	db := database.GetDB()
 
 	if err := db.Where("id = ?", id).First(&user).Error; err != nil {
@@ -46,7 +46,7 @@ func (service UserService) Get(id string, user *model.User) error {
 	return nil
 }
 
-func (service UserService) Update(id string, data map[string]interface{}, user *model.User) error {
+func (service *UserService) Update(id string, data map[string]interface{}, user *model.User) error {
 	db := database.GetDB()
 
 	if err := db.Debug().Where("id = ?", id).First(&user).Error; err != nil {
@@ -60,7 +60,7 @@ func (service UserService) Update(id string, data map[string]interface{}, user *
 	return nil
 }
 
-func (service UserService) Delete(id string) error {
+func (service *UserService) Delete(id string) error {
 	db := database.GetDB()
 
 	var user model.User

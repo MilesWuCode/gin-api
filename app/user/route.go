@@ -1,7 +1,6 @@
 package user
 
 import (
-	"log"
 	"time"
 
 	"github.com/gin-contrib/cache"
@@ -29,11 +28,12 @@ func Route(router *gin.Engine) {
 		routerGroup.GET("/:id", cache.CachePageWithoutQuery(store, time.Minute*10, controller.Get))
 
 		routerGroup.PUT("/:id", controller.Update, func(c *gin.Context) {
-			if err := store.Delete(cache.CreateKey("/user/1")); err != nil {
-				log.Println("remove cache:", err)
-			}
-
+			// Next() 上面的代碼先進先出執行
 			c.Next()
+			// Next() 下面的代碼先進後出執行
+
+			// 清除GET:/user/:id的快取
+			store.Delete(cache.CreateKey("/user/" + c.Param("id")))
 		})
 
 		routerGroup.DELETE("/:id", controller.Delete)

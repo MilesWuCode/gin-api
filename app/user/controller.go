@@ -3,6 +3,7 @@ package user
 import (
 	"context"
 	"fmt"
+	"gin-api/auth"
 	"gin-api/model"
 	"gin-api/plugin"
 	"net/http"
@@ -29,13 +30,8 @@ func (ctrl *Controller) List(c *gin.Context) {
 	c.ShouldBind(&p)
 
 	if list, err := userService.List(p); err != nil {
-		logger := plugin.InitLog()
-
-		defer logger.Sync()
-
-		logger.Error("userService.List(p)", zap.String("err", err.Error()))
-
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		// Abort(), AbortWithStatusJSON() 不執行後面的middleware不執行
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 	} else {
 		c.JSON(http.StatusOK, gin.H{"data": list})
 	}
@@ -77,17 +73,19 @@ func (ctrl *Controller) Create(c *gin.Context) {
 
 	// 表單值,key-value,複雜需要做客制代碼
 	user.Name = data.Name
+
 	user.Email = data.Email
-	user.Password = data.Password
+
+	if password, err := auth.SetPassword(data.Password); err != nil {
+		// Abort(), AbortWithStatusJSON() 不執行後面的middleware不執行
+		c.AbortWithStatusJSON(http.StatusConflict, gin.H{"error": err.Error()})
+	} else {
+		user.Password = password
+	}
 
 	if err := userService.Create(&user); err != nil {
-		logger := plugin.InitLog()
-
-		defer logger.Sync()
-
-		logger.Error("userService.Create(&user)", zap.String("err", err.Error()))
-
-		c.JSON(http.StatusConflict, gin.H{"error": err.Error()})
+		// Abort(), AbortWithStatusJSON() 不執行後面的middleware不執行
+		c.AbortWithStatusJSON(http.StatusConflict, gin.H{"error": err.Error()})
 	} else {
 		c.JSON(http.StatusOK, gin.H{"data": user})
 	}
@@ -105,13 +103,8 @@ func (ctrl *Controller) Get(c *gin.Context) {
 	var user model.User
 
 	if err := userService.Get(id, &user); err != nil {
-		logger := plugin.InitLog()
-
-		defer logger.Sync()
-
-		logger.Error("userService.Get(id)", zap.String("err", err.Error()))
-
-		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		// Abort(), AbortWithStatusJSON() 不執行後面的middleware不執行
+		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"error": err.Error()})
 	} else {
 		c.JSON(http.StatusOK, gin.H{"data": user})
 	}
@@ -134,7 +127,8 @@ func (ctrl *Controller) Update(c *gin.Context) {
 	c.ShouldBind(&data)
 
 	if err := plugin.Validate(data); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err})
+		// Abort(), AbortWithStatusJSON() 不執行後面的middleware不執行
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err})
 
 		return
 	}
@@ -147,13 +141,8 @@ func (ctrl *Controller) Update(c *gin.Context) {
 	var user model.User
 
 	if err := userService.Update(id, dataMap, &user); err != nil {
-		logger := plugin.InitLog()
-
-		defer logger.Sync()
-
-		logger.Error("userService.Update(id, &updateUser)", zap.String("err", err.Error()))
-
-		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		// Abort(), AbortWithStatusJSON() 不執行後面的middleware不執行
+		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"error": err.Error()})
 	} else {
 		c.JSON(http.StatusOK, gin.H{"data": user})
 	}
@@ -166,15 +155,11 @@ func (ctrl *Controller) Delete(c *gin.Context) {
 	var userService UserService
 
 	if err := userService.Delete(id); err != nil {
-		logger := plugin.InitLog()
-
-		defer logger.Sync()
-
-		logger.Error("userService.Delete(id)", zap.String("err", err.Error()))
-
-		c.JSON(http.StatusConflict, gin.H{"error": err.Error()})
+		// Abort(), AbortWithStatusJSON() 不執行後面的middleware不執行
+		c.AbortWithStatusJSON(http.StatusConflict, gin.H{"error": err.Error()})
 	} else {
-		c.AbortWithStatus(http.StatusNoContent)
+		// Status() 只回應 http
+		c.Status(http.StatusNoContent)
 	}
 }
 
