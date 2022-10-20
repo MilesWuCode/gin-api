@@ -1,12 +1,31 @@
 package user
 
 import (
+	"gin-api/model"
+	"net/http"
 	"time"
 
 	"github.com/gin-contrib/cache"
 	"github.com/gin-contrib/cache/persistence"
 	"github.com/gin-gonic/gin"
 )
+
+// wip
+func PolicyGet() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		// c.Request.Method;
+		
+		policy := Policy{}
+
+		if can := policy.View(model.User{}, model.User{}); can {
+			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "permission denied"})
+
+			return
+		}
+
+		c.Next()
+	}
+}
 
 func Route(router *gin.Engine) {
 	// router做cache
@@ -25,7 +44,7 @@ func Route(router *gin.Engine) {
 		routerGroup.POST("/", controller.Create)
 
 		// withOutQuery
-		routerGroup.GET("/:id", cache.CachePageWithoutQuery(store, time.Minute*10, controller.Get))
+		routerGroup.GET("/:id", PolicyGet(), cache.CachePageWithoutQuery(store, time.Minute*10, controller.Get))
 
 		routerGroup.PUT("/:id", controller.Update, func(c *gin.Context) {
 			// Next() 上面的代碼先進先出執行
