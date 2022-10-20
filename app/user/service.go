@@ -29,7 +29,7 @@ func (service UserService) List(p plugin.Pagination) ([]model.User, error) {
 func (service UserService) Create(user *model.User) error {
 	db := database.GetDB()
 
-	if err := db.Create(&user).Error; err != nil {
+	if err := db.Debug().Create(&user).Error; err != nil {
 		return err
 	}
 

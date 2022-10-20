@@ -1,7 +1,7 @@
 package user
 
 import (
-	"fmt"
+	"log"
 	"time"
 
 	"github.com/gin-contrib/cache"
@@ -10,7 +10,6 @@ import (
 )
 
 func Route(router *gin.Engine) {
-
 	// router做cache
 	// 本機很快
 	store := persistence.NewInMemoryStore(time.Second)
@@ -31,7 +30,7 @@ func Route(router *gin.Engine) {
 
 		routerGroup.PUT("/:id", controller.Update, func(c *gin.Context) {
 			if err := store.Delete(cache.CreateKey("/user/1")); err != nil {
-				fmt.Println("del::::::", err)
+				log.Println("remove cache:", err)
 			}
 
 			c.Next()

@@ -25,9 +25,7 @@ func InitLog() *zap.Logger {
 	return logger
 
 	// 範例
-	// func init() {
-	// 	logger = plugin.InitLog()
-	// 	defer logger.Sync()
-	//  logger.Info("userService.Create", zap.String("user.id", strconv.FormatUint(uint64(user.ID), 10)), zap.String("user.name", user.Name))
-	// }
+	// logger := plugin.InitLog()
+	// defer logger.Sync()
+	// logger.Info("userService.Create", zap.String("user.id", strconv.FormatUint(uint64(user.ID), 10)), zap.String("user.name", user.Name))
 }

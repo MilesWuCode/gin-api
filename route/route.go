@@ -9,9 +9,7 @@ import (
 )
 
 func Router() *gin.Engine {
-	// gin.log
-	// 範例 log.Printf("string")
-
+	// gin.routerLog
 	gin.DisableConsoleColor()
 
 	// log檔案位置

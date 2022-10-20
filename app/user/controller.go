@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"gin-api/model"
 	"gin-api/plugin"
-	"log"
 	"net/http"
 	"path/filepath"
 
@@ -16,16 +15,6 @@ import (
 )
 
 type Controller struct{}
-
-var logger *zap.Logger
-
-func init() {
-	log.Println("user.controller.init")
-
-	logger = plugin.InitLog()
-
-	defer logger.Sync()
-}
 
 func (ctrl *Controller) List(c *gin.Context) {
 	// path
@@ -40,6 +29,10 @@ func (ctrl *Controller) List(c *gin.Context) {
 	c.ShouldBind(&p)
 
 	if list, err := userService.List(p); err != nil {
+		logger := plugin.InitLog()
+
+		defer logger.Sync()
+
 		logger.Error("userService.List(p)", zap.String("err", err.Error()))
 
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -88,6 +81,10 @@ func (ctrl *Controller) Create(c *gin.Context) {
 	user.Password = data.Password
 
 	if err := userService.Create(&user); err != nil {
+		logger := plugin.InitLog()
+
+		defer logger.Sync()
+
 		logger.Error("userService.Create(&user)", zap.String("err", err.Error()))
 
 		c.JSON(http.StatusConflict, gin.H{"error": err.Error()})
@@ -108,6 +105,10 @@ func (ctrl *Controller) Get(c *gin.Context) {
 	var user model.User
 
 	if err := userService.Get(id, &user); err != nil {
+		logger := plugin.InitLog()
+
+		defer logger.Sync()
+
 		logger.Error("userService.Get(id)", zap.String("err", err.Error()))
 
 		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
@@ -146,6 +147,10 @@ func (ctrl *Controller) Update(c *gin.Context) {
 	var user model.User
 
 	if err := userService.Update(id, dataMap, &user); err != nil {
+		logger := plugin.InitLog()
+
+		defer logger.Sync()
+
 		logger.Error("userService.Update(id, &updateUser)", zap.String("err", err.Error()))
 
 		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
@@ -161,6 +166,10 @@ func (ctrl *Controller) Delete(c *gin.Context) {
 	var userService UserService
 
 	if err := userService.Delete(id); err != nil {
+		logger := plugin.InitLog()
+
+		defer logger.Sync()
+
 		logger.Error("userService.Delete(id)", zap.String("err", err.Error()))
 
 		c.JSON(http.StatusConflict, gin.H{"error": err.Error()})
@@ -195,6 +204,12 @@ func (ctrl *Controller) UploadAvatar(c *gin.Context) {
 	info, err := minioClient.FPutObject(ctx, bucketName, objectName, filePath, minio.PutObjectOptions{ContentType: contentType})
 
 	if err != nil {
+		logger := plugin.InitLog()
+
+		defer logger.Sync()
+
+		logger.Error("userService.Delete(id)", zap.String("err", err.Error()))
+
 		c.JSON(http.StatusBadRequest, gin.H{"error": "file upload error"})
 
 		return
