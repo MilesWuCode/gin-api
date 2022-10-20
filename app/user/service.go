@@ -2,15 +2,16 @@ package user
 
 import (
 	"gin-api/database"
+	"gin-api/model"
 	"gin-api/plugin"
 )
 
 type UserService struct{}
 
-func (service UserService) List(p plugin.Pagination) ([]UserModel, error) {
+func (service UserService) List(p plugin.Pagination) ([]model.User, error) {
 	db := database.GetDB()
 
-	var user []UserModel
+	var user []model.User
 
 	limit, offset, err := p.Ready()
 
@@ -25,7 +26,7 @@ func (service UserService) List(p plugin.Pagination) ([]UserModel, error) {
 	return user, nil
 }
 
-func (service UserService) Create(user *UserModel) error {
+func (service UserService) Create(user *model.User) error {
 	db := database.GetDB()
 
 	if err := db.Create(&user).Error; err != nil {
@@ -35,7 +36,7 @@ func (service UserService) Create(user *UserModel) error {
 	return nil
 }
 
-func (service UserService) Get(id string, user *UserModel) error {
+func (service UserService) Get(id string, user *model.User) error {
 	db := database.GetDB()
 
 	if err := db.Where("id = ?", id).First(&user).Error; err != nil {
@@ -45,7 +46,7 @@ func (service UserService) Get(id string, user *UserModel) error {
 	return nil
 }
 
-func (service UserService) Update(id string, data map[string]interface{}, user *UserModel) error {
+func (service UserService) Update(id string, data map[string]interface{}, user *model.User) error {
 	db := database.GetDB()
 
 	if err := db.Debug().Where("id = ?", id).First(&user).Error; err != nil {
@@ -62,7 +63,7 @@ func (service UserService) Update(id string, data map[string]interface{}, user *
 func (service UserService) Delete(id string) error {
 	db := database.GetDB()
 
-	var user UserModel
+	var user model.User
 
 	// 使用Unscoped()查詢所有資料
 	// 範例 db.Unscoped().Where("age = 20").Find(&users)

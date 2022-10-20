@@ -1,7 +1,7 @@
 package database
 
 import (
-	"gin-api/app/user"
+	"gin-api/model"
 
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
@@ -56,5 +56,5 @@ func GetDB() *gorm.DB {
 }
 
 func AutoMigrate() {
-	db.AutoMigrate(&user.UserModel{})
+	db.AutoMigrate(&model.User{})
 }

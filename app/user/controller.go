@@ -3,6 +3,7 @@ package user
 import (
 	"context"
 	"fmt"
+	"gin-api/model"
 	"gin-api/plugin"
 	"log"
 	"net/http"
@@ -79,7 +80,7 @@ func (ctrl *Controller) Create(c *gin.Context) {
 
 	var userService UserService
 
-	var user UserModel
+	var user model.User
 
 	// 表單值,key-value,複雜需要做客制代碼
 	user.Name = data.Name
@@ -104,7 +105,7 @@ func (ctrl *Controller) Get(c *gin.Context) {
 
 	var userService UserService
 
-	var user UserModel
+	var user model.User
 
 	if err := userService.Get(id, &user); err != nil {
 		logger.Error("userService.Get(id)", zap.String("err", err.Error()))
@@ -142,7 +143,7 @@ func (ctrl *Controller) Update(c *gin.Context) {
 
 	var userService UserService
 
-	var user UserModel
+	var user model.User
 
 	if err := userService.Update(id, dataMap, &user); err != nil {
 		logger.Error("userService.Update(id, &updateUser)", zap.String("err", err.Error()))

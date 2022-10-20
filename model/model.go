@@ -1,4 +1,4 @@
-package user
+package model
 
 import (
 	"log"
@@ -7,7 +7,7 @@ import (
 	"gorm.io/gorm"
 )
 
-type UserModel struct {
+type User struct {
 	// gorm欄位
 	// gorm.Model
 	ID        uint           `gorm:"primarykey" json:"id"`
@@ -25,20 +25,20 @@ type UserModel struct {
 }
 
 // table name
-func (t *UserModel) TableName() string {
-	log.Println("user.model.tablename")
+func (t *User) TableName() string {
+	log.Println("model.User.tablename")
 
 	return "users"
 }
 
 // events:BeforeSave, BeforeUpdate, AfterSave, AfterUpdate
 
-func (t *UserModel) AfterUpdate(tx *gorm.DB) (err error) {
+func (t *User) AfterUpdate(tx *gorm.DB) (err error) {
 	// if t.Role == "admin" {
 	// 	return errors.New("admin user not allowed to update")
 	// }
 
-	log.Println("user.model.AfterUpdate")
+	log.Println("model.User.AfterUpdate")
 
 	return
 }
