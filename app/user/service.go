@@ -8,6 +8,7 @@ import (
 
 type Service struct{}
 
+// 清單
 func (service *Service) List(p plugin.Pagination) ([]model.User, error) {
 	db := database.GetDB()
 
@@ -26,6 +27,7 @@ func (service *Service) List(p plugin.Pagination) ([]model.User, error) {
 	return user, nil
 }
 
+// 新增
 func (service *Service) Create(user *model.User) error {
 	db := database.GetDB()
 
@@ -36,6 +38,7 @@ func (service *Service) Create(user *model.User) error {
 	return nil
 }
 
+// 取值
 func (service *Service) Get(id string, user *model.User) error {
 	db := database.GetDB()
 
@@ -46,6 +49,7 @@ func (service *Service) Get(id string, user *model.User) error {
 	return nil
 }
 
+// 修改
 func (service *Service) Update(id string, data map[string]interface{}, user *model.User) error {
 	db := database.GetDB()
 
@@ -60,6 +64,7 @@ func (service *Service) Update(id string, data map[string]interface{}, user *mod
 	return nil
 }
 
+// 刪除
 func (service *Service) Delete(id string) error {
 	db := database.GetDB()
 
