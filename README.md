@@ -58,7 +58,13 @@
 
   - https://github.com/volatiletech/authboss - 參考
 
-- crypto -https://github.com/golang/crypto
+- Role Based Access Control (RBAC), roles & permissions
+
+  - https://github.com/harranali/authority
+
+- crypto
+
+  - https://github.com/golang/crypto
 
 ## 待開發
 
