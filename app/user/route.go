@@ -27,17 +27,22 @@ func Route(router *gin.Engine) {
 		// withOutQuery
 		routerGroup.GET("/:id", GetPolicy(), cache.CachePageWithoutQuery(store, time.Minute*10, controller.Get))
 
-		routerGroup.PUT("/:id", UpdatePolicy(), controller.Update, func(c *gin.Context) {
-			// Next() 上面的代碼先進先出執行
-			c.Next()
-			// Next() 下面的代碼先進後出執行
+		routerGroup.PUT("/:id", UpdatePolicy(), controller.Update, ClearCache(store))
 
-			// 清除GET:/user/:id的快取
-			store.Delete(cache.CreateKey("/user/" + c.Param("id")))
-		})
+		routerGroup.DELETE("/:id", DeletePolicy(), controller.Delete, ClearCache(store))
 
-		routerGroup.DELETE("/:id", DeletePolicy(), controller.Delete)
+		routerGroup.POST("/:id/avatar", controller.UploadAvatar, ClearCache(store))
+	}
+}
 
-		routerGroup.POST("/:id/avatar", controller.UploadAvatar)
+// 清除快取
+func ClearCache(store *persistence.InMemoryStore) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		// Next() 上面的代碼先進先出執行
+		c.Next()
+		// Next() 下面的代碼先進後出執行
+
+		// 清除 GET:/user/:id 產生的舊快取
+		store.Delete(cache.CreateKey("/user/" + c.Param("id")))
 	}
 }
