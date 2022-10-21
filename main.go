@@ -5,6 +5,7 @@ import (
 	"gin-api/database"
 	"gin-api/plugin"
 	"gin-api/route"
+
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/viper"
 )

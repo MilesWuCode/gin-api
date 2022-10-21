@@ -12,6 +12,7 @@ import (
 var db *gorm.DB
 var err error
 
+// 初始化
 func init() {
 	db, err = gorm.Open(sqlite.Open("sqlite.db"), &gorm.Config{})
 
@@ -51,10 +52,21 @@ func init() {
 	sqlDB.SetConnMaxIdleTime(2 * time.Hour)
 }
 
+// 取得物件
 func GetDB() *gorm.DB {
 	return db
 }
 
+// 自動轉移資料表
 func AutoMigrate() {
 	db.AutoMigrate(&model.User{})
+}
+
+// 簡易查詢
+func First(m interface{}) error {
+	if err := db.Debug().First(&m); err != nil {
+		return err.Error
+	}
+
+	return nil
 }

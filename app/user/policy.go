@@ -1,25 +1,82 @@
 package user
 
-import "gin-api/model"
+import (
+	"fmt"
+	"gin-api/database"
+	"gin-api/model"
+	"net/http"
+	"strconv"
 
-type Policy struct{}
+	"github.com/gin-gonic/gin"
+)
 
-func (policy *Policy) ViewAny(user model.User) bool {
-	return true
+func GetPolicy() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		// c.Request.Method;
+		id := c.Param("id")
+		i, _ := strconv.ParseUint(id, 10, 64)
+
+		// wip:換成jwt判別身份
+		user := model.User{ID: uint(i)}
+		database.First(&user)
+		fmt.Println(user)
+
+		item := model.User{ID: uint(i)}
+		database.First(&item)
+		fmt.Println(item)
+
+		if user.ID != item.ID {
+			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "permission denied"})
+
+			return
+		}
+
+		c.Next()
+	}
 }
 
-func (policy *Policy) View(user model.User, model model.User) bool {
-	return true
+func UpdatePolicy() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		id := c.Param("id")
+
+		i, _ := strconv.ParseUint(id, 10, 64)
+
+		// wip:換成jwt判別身份
+		user := model.User{ID: uint(i)}
+		database.First(&user)
+
+		item := model.User{ID: uint(i)}
+		database.First(&item)
+
+		if user.ID != item.ID {
+			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "permission denied"})
+
+			return
+		}
+
+		c.Next()
+	}
 }
 
-func (policy *Policy) Create(user model.User) bool {
-	return true
-}
+func DeletePolicy() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		id := c.Param("id")
 
-func (policy *Policy) Update(user model.User, model model.User) bool {
-	return true
-}
+		i, _ := strconv.ParseUint(id, 10, 64)
 
-func (policy *Policy) Delete(user model.User, model model.User) bool {
-	return true
+		// wip:換成jwt判別身份
+		user := model.User{ID: uint(i)}
+		database.First(&user)
+
+		item := model.User{ID: uint(i)}
+		database.First(&item)
+
+		if user.ID != item.ID {
+			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "permission denied"})
+
+			return
+		}
+
+		c.Next()
+	}
 }
