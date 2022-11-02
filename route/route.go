@@ -1,6 +1,7 @@
 package route
 
 import (
+	"gin-api/app/test"
 	"gin-api/app/user"
 	"io"
 	"os"
@@ -37,7 +38,11 @@ func Router() *gin.Engine {
 	// Set a lower memory limit for multipart forms (default is 32 MiB)
 	router.MaxMultipartMemory = 8 << 20 // 8 MiB
 
+	// user
 	user.Route(router)
+
+	// test
+	test.Route(router)
 
 	return router
 }

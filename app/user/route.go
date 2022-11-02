@@ -20,7 +20,7 @@ func Route(router *gin.Engine) {
 	routerGroup := router.Group("/user")
 	{
 		// withQuery:page&size
-		routerGroup.GET("/", cache.CachePage(store, time.Minute*10, controller.List))
+		routerGroup.GET("/", cache.CachePage(store, time.Minute, controller.List))
 
 		routerGroup.POST("/", controller.Create)
 
