@@ -35,7 +35,7 @@ func Route(router *gin.Engine) {
 
 		routerGroup.POST("/:id/avatar", controller.UploadAvatar, ClearCache(store))
 
-		routerGroup.GET("/me", auth.Auth(), cache.CachePage(store, time.Minute, controller.Me))
+		routerGroup.GET("/me", auth.AuthMiddleware(), cache.CachePage(store, time.Minute, controller.Me))
 	}
 }
 

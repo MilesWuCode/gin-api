@@ -49,7 +49,7 @@ func ValidateToken(tokenString string) (uint, error) {
 	}
 }
 
-func Auth() gin.HandlerFunc {
+func AuthMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		tokenString := c.GetHeader("Authorization")
 
