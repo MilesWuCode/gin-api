@@ -2,8 +2,11 @@ package test
 
 import (
 	"fmt"
-	"gin-api/auth"
 	"net/http"
+
+	"gin-api/app/user"
+	"gin-api/auth"
+	"gin-api/model"
 
 	"github.com/gin-gonic/gin"
 )
@@ -11,9 +14,17 @@ import (
 type Controller struct{}
 
 func (ctrl *Controller) Page(c *gin.Context) {
-	token, _ := auth.GenerateJWT()
+	var userService user.Service
 
-	id, err := auth.ValidateToken(token)
+	var user model.User
+
+	if err := userService.Get("2", &user); err != nil {
+		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"error": err.Error()})
+	}
+
+	token, _ := auth.GenerateJWT(user)
+
+	id, err := auth.ValidateJWT(token)
 
 	fmt.Println(id, err)
 

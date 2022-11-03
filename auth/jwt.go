@@ -6,6 +6,8 @@ import (
 	"strings"
 	"time"
 
+	"gin-api/model"
+
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v4"
 	"github.com/spf13/viper"
@@ -16,12 +18,12 @@ type authClaims struct {
 	UserID uint `json:"user_id"`
 }
 
-func GenerateJWT() (string, error) {
+func GenerateJWT(user model.User) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, authClaims{
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: time.Now().Add(24 * time.Hour).Unix(),
 		},
-		UserID: 123,
+		UserID: user.ID,
 	})
 
 	tokenString, err := token.SignedString([]byte(viper.GetString("app.key")))
@@ -33,7 +35,7 @@ func GenerateJWT() (string, error) {
 	return tokenString, nil
 }
 
-func ValidateToken(tokenString string) (uint, error) {
+func ValidateJWT(tokenString string) (uint, error) {
 	token, err := jwt.ParseWithClaims(tokenString, &authClaims{}, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
@@ -69,7 +71,8 @@ func AuthMiddleware() gin.HandlerFunc {
 
 		token := strings.Trim(tokenArr[1], "\n\t\r")
 
-		if id, err := ValidateToken(token); err == nil {
+		if id, err := ValidateJWT(token); err == nil {
+			fmt.Println("id", id)
 			c.Set("id", id)
 		} else {
 			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": err.Error()})

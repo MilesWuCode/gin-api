@@ -3,11 +3,12 @@ package user
 import (
 	"context"
 	"fmt"
+	"net/http"
+	"path/filepath"
+
 	"gin-api/auth"
 	"gin-api/model"
 	"gin-api/plugin"
-	"net/http"
-	"path/filepath"
 
 	"github.com/gin-gonic/gin"
 	"github.com/minio/minio-go/v7"
