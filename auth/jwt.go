@@ -2,8 +2,10 @@ package auth
 
 import (
 	"fmt"
+	"net/http"
 	"time"
 
+	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v4"
 )
 
@@ -42,5 +44,27 @@ func ValidateToken(tokenString string) (uint, error) {
 		return claims.UserID, nil
 	} else {
 		return 0, err
+	}
+}
+
+func Auth() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		tokenString := c.GetHeader("Authorization")
+
+		if tokenString == "" {
+			c.AbortWithStatus(http.StatusUnauthorized)
+			return
+		}
+
+		id, err := ValidateToken(tokenString)
+
+		if err != nil {
+			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
+			return
+		}
+
+		c.Set("id", id)
+
+		c.Next()
 	}
 }

@@ -3,6 +3,8 @@ package user
 import (
 	"time"
 
+	"gin-api/auth"
+
 	"github.com/gin-contrib/cache"
 	"github.com/gin-contrib/cache/persistence"
 	"github.com/gin-gonic/gin"
@@ -32,6 +34,8 @@ func Route(router *gin.Engine) {
 		routerGroup.DELETE("/:id", DeletePolicy(), controller.Delete, ClearCache(store))
 
 		routerGroup.POST("/:id/avatar", controller.UploadAvatar, ClearCache(store))
+
+		routerGroup.GET("/me", auth.Auth(), controller.Me)
 	}
 }
 
