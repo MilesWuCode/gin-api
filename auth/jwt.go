@@ -3,6 +3,7 @@ package auth
 import (
 	"fmt"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -52,19 +53,28 @@ func Auth() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		tokenString := c.GetHeader("Authorization")
 
-		if tokenString == "" {
+		tokenArr := strings.Split(tokenString, " ")
+
+		if len(tokenArr) != 2 {
 			c.AbortWithStatus(http.StatusUnauthorized)
 			return
 		}
 
-		id, err := ValidateToken(tokenString)
+		authType := strings.Trim(tokenArr[0], "\n\r\t")
 
-		if err != nil {
-			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
+		if !strings.EqualFold(authType, "Bearer") {
+			c.AbortWithStatus(http.StatusUnauthorized)
 			return
 		}
 
-		c.Set("id", id)
+		token := strings.Trim(tokenArr[1], "\n\t\r")
+
+		if id, err := ValidateToken(token); err == nil {
+			c.Set("id", id)
+		} else {
+			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
+			return
+		}
 
 		c.Next()
 	}
