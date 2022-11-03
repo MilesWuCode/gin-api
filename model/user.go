@@ -25,7 +25,7 @@ type User struct {
 
 // table name
 func (t *User) TableName() string {
-	println("model.User.tablename")
+	// println("model.User.tablename")
 
 	return "users"
 }

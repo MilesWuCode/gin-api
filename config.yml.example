@@ -1,3 +1,5 @@
+app:
+  key: "my_secret_key"
 gin:
   port: 8081
 minio:

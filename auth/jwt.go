@@ -7,6 +7,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v4"
+	"github.com/spf13/viper"
 )
 
 type authClaims struct {
@@ -22,7 +23,7 @@ func GenerateJWT() (string, error) {
 		UserID: 123,
 	})
 
-	tokenString, err := token.SignedString([]byte("my_secret_key"))
+	tokenString, err := token.SignedString([]byte(viper.GetString("app.key")))
 
 	if err != nil {
 		return "", err
@@ -37,7 +38,7 @@ func ValidateToken(tokenString string) (uint, error) {
 			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
 		}
 
-		return []byte("my_secret_key"), nil
+		return []byte(viper.GetString("app.key")), nil
 	})
 
 	if claims, ok := token.Claims.(*authClaims); ok && token.Valid {
