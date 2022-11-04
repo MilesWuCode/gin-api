@@ -1,6 +1,8 @@
 package auth
 
 import (
+	"fmt"
+	"gin-api/app/user"
 	"gin-api/auth"
 	"gin-api/model"
 	"gin-api/plugin"
@@ -23,7 +25,6 @@ func (ctrl *Controller) Login(c *gin.Context) {
 	c.ShouldBind(&data)
 
 	if err := plugin.Validate(data); err != nil {
-		// Abort(), AbortWithStatusJSON() 不執行後面的middleware不執行
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err})
 
 		return
@@ -49,7 +50,18 @@ func (ctrl *Controller) Login(c *gin.Context) {
 }
 
 func (ctrl *Controller) Me(c *gin.Context) {
-	id, _ := c.Get("id")
+	id := c.GetUint("id")
 
-	c.JSON(http.StatusOK, gin.H{"data": id})
+	var userService user.Service
+
+	var user model.User
+	fmt.Println(id)
+	err := userService.Get(id, &user)
+
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"data": user})
 }

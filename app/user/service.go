@@ -39,10 +39,10 @@ func (service *Service) Create(user *model.User) error {
 }
 
 // 取值
-func (service *Service) Get(id string, user *model.User) error {
+func (service *Service) Get(id interface{}, user *model.User) error {
 	db := database.GetDB()
 
-	if err := db.Where("id = ?", id).First(&user).Error; err != nil {
+	if err := db.Debug().Where("id = ?", id).First(&user).Error; err != nil {
 		return err
 	}
 
@@ -50,7 +50,7 @@ func (service *Service) Get(id string, user *model.User) error {
 }
 
 // 修改
-func (service *Service) Update(id string, data map[string]interface{}, user *model.User) error {
+func (service *Service) Update(id interface{}, data map[string]interface{}, user *model.User) error {
 	db := database.GetDB()
 
 	if err := db.Debug().Where("id = ?", id).First(&user).Error; err != nil {
@@ -65,7 +65,7 @@ func (service *Service) Update(id string, data map[string]interface{}, user *mod
 }
 
 // 刪除
-func (service *Service) Delete(id string) error {
+func (service *Service) Delete(id interface{}) error {
 	db := database.GetDB()
 
 	var user model.User
