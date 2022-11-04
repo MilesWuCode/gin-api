@@ -18,7 +18,7 @@ type authClaims struct {
 	UserID uint `json:"user_id"`
 }
 
-func GenerateJWT(user model.User) (string, error) {
+func GenerateJWT(user *model.User) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, authClaims{
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: time.Now().Add(24 * time.Hour).Unix(),

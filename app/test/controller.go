@@ -22,7 +22,7 @@ func (ctrl *Controller) Page(c *gin.Context) {
 		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"error": err.Error()})
 	}
 
-	token, _ := auth.GenerateJWT(user)
+	token, _ := auth.GenerateJWT(&user)
 
 	id, err := auth.ValidateJWT(token)
 
