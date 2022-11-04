@@ -3,8 +3,6 @@ package user
 import (
 	"time"
 
-	"gin-api/auth"
-
 	"github.com/gin-contrib/cache"
 	"github.com/gin-contrib/cache/persistence"
 	"github.com/gin-gonic/gin"
@@ -34,9 +32,6 @@ func Route(router *gin.Engine) {
 		routerGroup.DELETE("/:id", DeletePolicy(), controller.Delete, ClearCache(store))
 
 		routerGroup.POST("/:id/avatar", controller.UploadAvatar, ClearCache(store))
-
-		// wip:因為無法針對 headers 做快取,所以 Bearer JWT 無法做到不同人不同資料的快取
-		routerGroup.GET("/me", auth.AuthMiddleware(), cache.CachePageWithoutHeader(store, time.Minute, controller.Me))
 	}
 }
 

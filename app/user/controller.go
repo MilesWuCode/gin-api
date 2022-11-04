@@ -230,9 +230,3 @@ func (ctrl *Controller) UploadAvatar(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"data": uploadFile})
 }
-
-func (ctrl *Controller) Me(c *gin.Context) {
-	id, _ := c.Get("id")
-
-	c.JSON(http.StatusOK, gin.H{"data": id})
-}
