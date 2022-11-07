@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"gin-api/app/auth"
+	"gin-api/app/post"
 	"gin-api/app/test"
 	"gin-api/app/user"
 
@@ -45,6 +46,9 @@ func Router() *gin.Engine {
 
 	// user
 	user.Route(router)
+
+	// post
+	post.Route(router)
 
 	// test
 	test.Route(router)

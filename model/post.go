@@ -15,7 +15,7 @@ type Post struct {
 	DeletedAt gorm.DeletedAt `gorm:"index" json:"deleted_at"`
 
 	// 自訂義欄位
-	Name    string `gorm:"not null;comment:標題" json:"name"`
+	Title   string `gorm:"not null;comment:標題" json:"tile"`
 	Content string `gorm:"type:text;comment:內文" json:"content"`
 	State   bool   `gorm:"default:true" json:"state"`
 

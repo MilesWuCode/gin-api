@@ -59,7 +59,7 @@ func GetDB() *gorm.DB {
 
 // 自動轉移資料表
 func AutoMigrate() {
-	db.AutoMigrate(&model.User{})
+	db.AutoMigrate(&model.User{}, &model.Post{})
 }
 
 // 簡易查詢
