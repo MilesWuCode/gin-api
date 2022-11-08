@@ -14,7 +14,7 @@ type Controller struct{}
 func (ctrl *Controller) List(c *gin.Context) {
 	var service Service
 
-	p := plugin.Pagination{Page: 1, Size: 3}
+	p := plugin.Pagination{Page: 1, Size: 3, Sort: 0}
 
 	c.ShouldBind(&p)
 

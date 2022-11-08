@@ -24,7 +24,7 @@ func (ctrl *Controller) List(c *gin.Context) {
 	var service Service
 
 	// 預設值
-	p := plugin.Pagination{Page: 1, Size: 3}
+	p := plugin.Pagination{Page: 1, Size: 3, Sort: 0}
 
 	// Bind query string or post data
 	c.ShouldBind(&p)

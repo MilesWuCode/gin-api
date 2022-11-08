@@ -7,6 +7,7 @@ import (
 type Pagination struct {
 	Page int `form:"page"`
 	Size int `form:"size"`
+	Sort int `form:"sort"`
 }
 
 func (p *Pagination) Ready() (limit int, offset int, err error) {

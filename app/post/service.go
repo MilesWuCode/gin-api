@@ -20,7 +20,18 @@ func (service *Service) List(p plugin.Pagination) ([]model.Post, error) {
 		return post, err
 	}
 
-	if err := db.Debug().Limit(limit).Offset(offset).Find(&post).Error; err != nil {
+	query := db.Debug().Limit(limit).Offset(offset)
+
+	switch p.Sort {
+	case 1:
+		query.Order("id desc")
+	case 2:
+		query.Order("updated_at desc")
+	case 3:
+		query.Order("id desc").Order("updated_at desc")
+	}
+
+	if err := query.Find(&post).Error; err != nil {
 		return nil, err
 	}
 
