@@ -49,6 +49,8 @@ func (ctrl *Controller) Create(c *gin.Context) {
 
 	post.Content = data.Content
 
+	post.UserID = c.GetUint("id")
+
 	if err := service.Create(&post); err != nil {
 		c.AbortWithStatusJSON(http.StatusConflict, gin.H{"error": err.Error()})
 	} else {

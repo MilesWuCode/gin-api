@@ -1,6 +1,7 @@
 package post
 
 import (
+	"gin-api/auth"
 	"time"
 
 	"github.com/gin-contrib/cache"
@@ -22,14 +23,14 @@ func Route(router *gin.Engine) {
 		// withQuery:page&size
 		routerGroup.GET("/", cache.CachePage(store, time.Minute, controller.List))
 
-		routerGroup.POST("/", controller.Create)
+		routerGroup.POST("/", auth.AuthMiddleware(), controller.Create)
 
 		// withOutQuery
 		routerGroup.GET("/:id", GetPolicy(), cache.CachePageWithoutQuery(store, time.Minute*10, controller.Get))
 
-		routerGroup.PUT("/:id", UpdatePolicy(), controller.Update, ClearCache(store))
+		routerGroup.PUT("/:id", auth.AuthMiddleware(), UpdatePolicy(), controller.Update, ClearCache(store))
 
-		routerGroup.DELETE("/:id", DeletePolicy(), controller.Delete, ClearCache(store))
+		routerGroup.DELETE("/:id", auth.AuthMiddleware(), DeletePolicy(), controller.Delete, ClearCache(store))
 	}
 }
 

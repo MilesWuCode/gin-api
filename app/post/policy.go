@@ -1,7 +1,6 @@
 package post
 
 import (
-	"fmt"
 	"gin-api/database"
 	"gin-api/model"
 	"net/http"
@@ -12,20 +11,17 @@ import (
 
 func GetPolicy() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		// c.Request.Method;
-		id := c.Param("id")
-		i, _ := strconv.ParseUint(id, 10, 64)
+		db := database.GetDB()
 
-		// wip:換成jwt判別身份
-		user := model.User{ID: uint(i)}
-		database.First(&user)
-		fmt.Println(user)
+		userID := c.GetUint("id")
 
-		item := model.User{ID: uint(i)}
-		database.First(&item)
-		fmt.Println(item)
+		id, _ := strconv.ParseUint(c.Param("id"), 10, 64)
 
-		if user.ID != item.ID {
+		item := model.Post{ID: uint(id)}
+
+		db.First(&item)
+
+		if userID != item.UserID {
 			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "permission denied"})
 
 			return
@@ -37,18 +33,17 @@ func GetPolicy() gin.HandlerFunc {
 
 func UpdatePolicy() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		id := c.Param("id")
+		db := database.GetDB()
 
-		i, _ := strconv.ParseUint(id, 10, 64)
+		userID := c.GetUint("id")
 
-		// wip:換成jwt判別身份
-		user := model.User{ID: uint(i)}
-		database.First(&user)
+		id, _ := strconv.ParseUint(c.Param("id"), 10, 64)
 
-		item := model.User{ID: uint(i)}
-		database.First(&item)
+		item := model.Post{ID: uint(id)}
 
-		if user.ID != item.ID {
+		db.First(&item)
+
+		if userID != item.UserID {
 			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "permission denied"})
 
 			return
@@ -60,18 +55,17 @@ func UpdatePolicy() gin.HandlerFunc {
 
 func DeletePolicy() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		id := c.Param("id")
+		db := database.GetDB()
 
-		i, _ := strconv.ParseUint(id, 10, 64)
+		userID := c.GetUint("id")
 
-		// wip:換成jwt判別身份
-		user := model.User{ID: uint(i)}
-		database.First(&user)
+		id, _ := strconv.ParseUint(c.Param("id"), 10, 64)
 
-		item := model.User{ID: uint(i)}
-		database.First(&item)
+		item := model.Post{ID: uint(id)}
 
-		if user.ID != item.ID {
+		db.First(&item)
+
+		if userID != item.UserID {
 			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "permission denied"})
 
 			return
