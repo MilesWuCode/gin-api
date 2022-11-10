@@ -67,9 +67,18 @@
 
   - https://github.com/golang/crypto
 
+- event
+
+  - https://github.com/ThreeDotsLabs/watermill
+
 ## 待開發
 
 - roles & permissions
 - file manager
+- event
 - graphql - 另開專案
 - grpc - 另開專案
+
+## 學習知識
+
+- https://github.com/open-policy-agent/opa
