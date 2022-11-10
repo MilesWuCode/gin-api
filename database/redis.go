@@ -9,7 +9,6 @@ import (
 	"github.com/spf13/viper"
 )
 
-var ctx = context.Background()
 var rdb *redis.Client
 
 func init() {
@@ -27,7 +26,7 @@ func init() {
 		DB:       0,
 	})
 
-	_, err := rdb.Ping(ctx).Result()
+	_, err := rdb.Ping(context.Background()).Result()
 
 	if err != nil {
 		panic(err)
