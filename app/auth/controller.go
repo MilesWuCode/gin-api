@@ -45,7 +45,7 @@ func (ctrl *Controller) Login(c *gin.Context) {
 		c.AbortWithStatus(http.StatusInternalServerError)
 	}
 
-	c.JSON(http.StatusOK, gin.H{"token": jwt})
+	c.JSON(http.StatusOK, gin.H{"type": "Bearer", "token": jwt})
 }
 
 func (ctrl *Controller) Me(c *gin.Context) {
