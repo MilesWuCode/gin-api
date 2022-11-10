@@ -69,7 +69,6 @@
 
 ## 待開發
 
-- policy middleware
 - roles & permissions
 - file manager
 - graphql - 另開專案
