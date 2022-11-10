@@ -22,6 +22,7 @@ func (service *Service) List(p plugin.Pagination) ([]model.Post, error) {
 
 	query := db.Debug().Preload("User").Limit(limit).Offset(offset)
 
+	// 代號轉規則
 	switch p.Sort {
 	case 1:
 		query.Order("id desc")
