@@ -26,7 +26,7 @@ func Route(router *gin.Engine) {
 		routerGroup.POST("/", auth.AuthMiddleware(), controller.Create)
 
 		// withOutQuery
-		routerGroup.GET("/:id", GetPolicy(), cache.CachePageWithoutQuery(store, time.Minute*10, controller.Get))
+		routerGroup.GET("/:id", cache.CachePageWithoutQuery(store, time.Minute*10, controller.Get))
 
 		routerGroup.PUT("/:id", auth.AuthMiddleware(), UpdatePolicy(), controller.Update, ClearCache(store))
 

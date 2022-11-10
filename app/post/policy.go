@@ -9,28 +9,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func GetPolicy() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		db := database.GetDB()
-
-		userID := c.GetUint("id")
-
-		id, _ := strconv.ParseUint(c.Param("id"), 10, 64)
-
-		item := model.Post{ID: uint(id)}
-
-		db.First(&item)
-
-		if userID != item.UserID {
-			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "permission denied"})
-
-			return
-		}
-
-		c.Next()
-	}
-}
-
 func UpdatePolicy() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		db := database.GetDB()
