@@ -15,14 +15,14 @@ var rdb *redis.Client
 func init() {
 	plugin.InitConfig()
 
-	addr := fmt.Sprintf("%v:%d", viper.GetString("redis.host"), viper.GetInt("redis.port"))
+	redisAddr := fmt.Sprintf("%v:%d", viper.GetString("redis.host"), viper.GetInt("redis.port"))
 
-	if len(addr) == 0 {
-		addr = "localhost:6379"
+	if len(redisAddr) == 0 {
+		redisAddr = "localhost:6379"
 	}
 
 	rdb = redis.NewClient(&redis.Options{
-		Addr:     addr,
+		Addr:     redisAddr,
 		Password: "",
 		DB:       0,
 	})

@@ -12,8 +12,13 @@ func Route(router *gin.Engine) {
 	// router做cache
 	// 本機很快
 	store := persistence.NewInMemoryStore(time.Second)
+
 	// 外部redis會慢一點
-	// store := persistence.NewRedisCache("192.168.50.92:6379", "", time.Second)
+	// redisAddr := fmt.Sprintf("%v:%d", viper.GetString("redis.host"), viper.GetInt("redis.port"))
+	// if len(redisAddr) == 0 {
+	// 	redisAddr = "localhost:6379"
+	// }
+	// store := persistence.NewRedisCache(redisAddr, "", time.Second)
 
 	controller := Controller{}
 
