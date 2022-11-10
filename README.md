@@ -55,8 +55,8 @@
   - https://github.com/golang-jwt/jwt
 
 - auth
-
-  - https://github.com/golang/oauth2
+  - https://github.com/go-oauth2/oauth2 - Server
+  - https://github.com/golang/oauth2 - Client
   - https://github.com/volatiletech/authboss - 參考
 
 - Role Based Access Control (RBAC), roles & permissions
