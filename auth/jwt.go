@@ -19,7 +19,7 @@ type authClaims struct {
 }
 
 func GenerateJWT(user *model.User) (string, int64, error) {
-	expire := time.Now().Add(24 * time.Hour).Unix()
+	expire := time.Now().Add(15 * time.Minute).Unix()
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, authClaims{
 		StandardClaims: jwt.StandardClaims{
