@@ -56,6 +56,7 @@
 
 - auth
 
+  - https://github.com/golang/oauth2
   - https://github.com/volatiletech/authboss - 參考
 
 - Role Based Access Control (RBAC), roles & permissions
@@ -71,5 +72,5 @@
 - policy middleware
 - roles & permissions
 - file manager
-- graphql
-- grpc
+- graphql - 另開專案
+- grpc - 另開專案
