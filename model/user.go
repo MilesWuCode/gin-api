@@ -21,7 +21,7 @@ type User struct {
 	Password string `gorm:"not null" json:"-"`
 
 	// 自訂義關聯
-	Posts []Post `gorm:"foreignkey:UserID"`
+	Posts []Post `gorm:"foreignkey:UserID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;" json:"posts,omitempty"`
 }
 
 // table-name

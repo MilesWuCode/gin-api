@@ -20,7 +20,7 @@ func (service *Service) List(p plugin.Pagination) ([]model.Post, error) {
 		return post, err
 	}
 
-	query := db.Debug().Limit(limit).Offset(offset)
+	query := db.Debug().Preload("User").Limit(limit).Offset(offset)
 
 	switch p.Sort {
 	case 1:

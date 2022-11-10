@@ -20,7 +20,8 @@ type Post struct {
 	State   bool   `gorm:"default:true" json:"state"`
 
 	// 自訂義關聯
-	UserID uint
+	UserID uint `gorm:"not null;comment:會員" json:"user_id"`
+	User   User `json:"user"`
 }
 
 // table-name
