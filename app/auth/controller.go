@@ -39,13 +39,13 @@ func (ctrl *Controller) Login(c *gin.Context) {
 		return
 	}
 
-	jwt, err := auth.GenerateJWT(&user)
+	token, expire, err := auth.GenerateJWT(&user)
 
 	if err != nil {
 		c.AbortWithStatus(http.StatusInternalServerError)
 	}
 
-	c.JSON(http.StatusOK, gin.H{"type": "Bearer", "token": jwt})
+	c.JSON(http.StatusOK, gin.H{"type": "Bearer", "token": token, "expire": expire})
 }
 
 func (ctrl *Controller) Me(c *gin.Context) {

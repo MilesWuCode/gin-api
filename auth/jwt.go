@@ -18,10 +18,12 @@ type authClaims struct {
 	UserID uint `json:"user_id"`
 }
 
-func GenerateJWT(user *model.User) (string, error) {
+func GenerateJWT(user *model.User) (string, int64, error) {
+	expire := time.Now().Add(24 * time.Hour).Unix()
+
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, authClaims{
 		StandardClaims: jwt.StandardClaims{
-			ExpiresAt: time.Now().Add(24 * time.Hour).Unix(),
+			ExpiresAt: expire,
 		},
 		UserID: user.ID,
 	})
@@ -29,10 +31,10 @@ func GenerateJWT(user *model.User) (string, error) {
 	tokenString, err := token.SignedString([]byte(viper.GetString("app.key")))
 
 	if err != nil {
-		return "", err
+		return "", 0, err
 	}
 
-	return tokenString, nil
+	return tokenString, expire, nil
 }
 
 func ValidateJWT(tokenString string) (uint, error) {
