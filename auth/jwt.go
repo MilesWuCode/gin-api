@@ -72,8 +72,7 @@ func AuthMiddleware() gin.HandlerFunc {
 		token := strings.Trim(tokenArr[1], "\n\t\r")
 
 		if id, err := ValidateJWT(token); err == nil {
-			fmt.Println("id", id)
-			c.Set("id", id)
+			c.Set("userID", id)
 		} else {
 			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
 			return

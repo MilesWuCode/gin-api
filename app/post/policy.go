@@ -35,7 +35,7 @@ func UpdatePolicy() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		db := database.GetDB()
 
-		userID := c.GetUint("id")
+		userID := c.GetUint("userID")
 
 		id, _ := strconv.ParseUint(c.Param("id"), 10, 64)
 
@@ -57,7 +57,7 @@ func DeletePolicy() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		db := database.GetDB()
 
-		userID := c.GetUint("id")
+		userID := c.GetUint("userID")
 
 		id, _ := strconv.ParseUint(c.Param("id"), 10, 64)
 

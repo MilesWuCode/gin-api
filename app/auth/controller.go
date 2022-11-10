@@ -1,7 +1,6 @@
 package auth
 
 import (
-	"fmt"
 	"gin-api/app/user"
 	"gin-api/auth"
 	"gin-api/model"
@@ -50,13 +49,13 @@ func (ctrl *Controller) Login(c *gin.Context) {
 }
 
 func (ctrl *Controller) Me(c *gin.Context) {
-	id := c.GetUint("id")
+	userID := c.GetUint("userID")
 
 	var userService user.Service
 
 	var user model.User
-	fmt.Println(id)
-	err := userService.Get(id, &user)
+
+	err := userService.Get(userID, &user)
 
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"error": err.Error()})
