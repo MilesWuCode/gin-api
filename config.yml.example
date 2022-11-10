@@ -2,6 +2,9 @@ app:
   key: "my_secret_key"
 gin:
   port: 8081
+redis:
+  host: "localhost"
+  port: 6379
 minio:
   endpoint:
   accessKey:
