@@ -93,16 +93,17 @@ func AuthMiddleware() gin.HandlerFunc {
 
 // case2:
 type TokenDetail struct {
-	AccessToken  string
-	RefreshToken string
-	AccessUuid   string
-	RefreshUuid  string
-	AtExpires    int64
-	RtExpires    int64
+	Type         string `json:"type"`
+	AccessToken  string `json:"access_token"`
+	AccessUuid   string `json:"-"`
+	AtExpires    int64  `json:"access_expire"`
+	RefreshToken string `json:"refresh_token"`
+	RefreshUuid  string `json:"-"`
+	RtExpires    int64  `json:"refresh_expire"`
 }
 
 func CreateToken(userID uint) (*TokenDetail, error) {
-	detail := &TokenDetail{}
+	detail := &TokenDetail{Type: "Bearer"}
 	detail.AccessUuid = uuid.New().String()
 	detail.AtExpires = time.Now().Add(15 * time.Minute).Unix()
 	detail.RefreshUuid = uuid.New().String()
