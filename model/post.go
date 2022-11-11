@@ -21,7 +21,8 @@ type Post struct {
 
 	// 自訂義關聯
 	UserID uint `gorm:"not null;comment:會員" json:"user_id"`
-	User   User `json:"user"`
+	User   User `gorm:"foreignkey:UserID" json:"user,omitempty"`
+	// User User `gorm:"references:ID" json:"user,omitempty"`
 }
 
 // table-name
