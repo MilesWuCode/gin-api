@@ -69,7 +69,6 @@ func (ctrl *Controller) Me(c *gin.Context) {
 }
 
 func (ctrl *Controller) Login(c *gin.Context) {
-
 	type FormData struct {
 		Email    string `form:"email" json:"email" validate:"required,email" label:"帳號"`
 		Password string `form:"password" json:"password" validate:"required" label:"密碼"`
@@ -139,9 +138,41 @@ func (ctrl *Controller) Logout(c *gin.Context) {
 		c.AbortWithStatus(http.StatusInternalServerError)
 	}
 
-	if auth.DeleteUUID(ad.AccessUUID) {
+	if auth.DeleteAuth(ad.AccessUUID) {
 		c.AbortWithStatus(http.StatusOK)
 	} else {
 		c.AbortWithStatus(http.StatusInternalServerError)
 	}
+}
+
+func (ctrl *Controller) RefreshToken(c *gin.Context) {
+	userID := c.GetUint("userID")
+
+	var userService user.Service
+
+	var user model.User
+
+	err := userService.Get(userID, &user)
+
+	if err != nil {
+		c.AbortWithStatus(http.StatusUnauthorized)
+
+		return
+	}
+
+	tokenDetail, err := auth.CreateToken(user.ID)
+
+	if err != nil {
+		c.AbortWithStatus(http.StatusInternalServerError)
+
+		return
+	}
+
+	if err := auth.CreateAuth(user.ID, tokenDetail); err != nil {
+		c.AbortWithStatus(http.StatusInternalServerError)
+
+		return
+	}
+
+	c.JSON(http.StatusOK, tokenDetail)
 }

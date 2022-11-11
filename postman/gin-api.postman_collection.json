@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "0fa6ae3e-9976-4ed3-9931-f59b60965f1c",
+		"_postman_id": "c48f69f8-5b2f-48ae-9da2-9599fcc08ea4",
 		"name": "gin-api",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "6689115"
@@ -218,9 +218,9 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"const { token } = JSON.parse(responseBody);",
-									"",
-									"postman.setEnvironmentVariable('TOKEN', token);"
+									"const { access_token, refresh_token } = JSON.parse(responseBody);",
+									"postman.setEnvironmentVariable('ACCESS_TOEKN', access_token);",
+									"postman.setEnvironmentVariable('REFRESH_TOEKN', refresh_token);"
 								],
 								"type": "text/javascript"
 							}
@@ -268,7 +268,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "{{TOKEN}}",
+									"value": "{{ACCESS_TOEKN}}",
 									"type": "string"
 								}
 							]
@@ -291,6 +291,86 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "refresh",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const { access_token, refresh_token } = JSON.parse(responseBody);",
+									"postman.setEnvironmentVariable('ACCESS_TOEKN', access_token);",
+									"postman.setEnvironmentVariable('REFRESH_TOEKN', refresh_token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{REFRESH_TOEKN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{API_URL}}/auth/refresh",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"auth",
+								"refresh"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "logout",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{ACCESS_TOEKN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{API_URL}}/auth/logout",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"auth",
+								"logout"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -303,7 +383,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{API_URL}}/post?page=1&size=3&sort=3",
+							"raw": "{{API_URL}}/post?page=1&size=3&sort=1",
 							"host": [
 								"{{API_URL}}"
 							],
@@ -321,7 +401,7 @@
 								},
 								{
 									"key": "sort",
-									"value": "3"
+									"value": "1"
 								}
 							]
 						}
@@ -336,7 +416,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "{{TOKEN}}",
+									"value": "{{ACCESS_TOEKN}}",
 									"type": "string"
 								}
 							]
@@ -398,7 +478,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "{{TOKEN}}",
+									"value": "{{ACCESS_TOEKN}}",
 									"type": "string"
 								}
 							]
