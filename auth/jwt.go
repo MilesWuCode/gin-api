@@ -186,7 +186,7 @@ type RefreshDetail struct {
 }
 
 // 提取Access
-func ExtractAccessClaim(tokenString string) (*AccessDetail, error) {
+func ExtractAccessDetail(tokenString string) (*AccessDetail, error) {
 	token, err := jwt.ParseWithClaims(tokenString, &AccessClaims{}, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
@@ -245,7 +245,7 @@ func AuthMiddleware() gin.HandlerFunc {
 
 		token := strings.Trim(tokenArr[1], "\n\t\r")
 
-		accessDetail, err := ExtractAccessClaim(token)
+		accessDetail, err := ExtractAccessDetail(token)
 
 		if err != nil {
 			c.AbortWithStatus(http.StatusUnauthorized)
@@ -263,4 +263,16 @@ func AuthMiddleware() gin.HandlerFunc {
 
 		c.Next()
 	}
+}
+
+// 刪除RedisUUID
+func DeleteUUID(uuid string) bool {
+	rdb := database.GetRdb()
+	ctx := context.Background()
+
+	if _, err := rdb.Del(ctx, uuid).Result(); err != nil {
+		return false
+	}
+
+	return true
 }

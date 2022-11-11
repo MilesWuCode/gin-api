@@ -6,6 +6,7 @@ import (
 	"gin-api/model"
 	"gin-api/plugin"
 	"net/http"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 )
@@ -49,7 +50,6 @@ type Controller struct{}
 // 	c.JSON(http.StatusOK, gin.H{"type": "Bearer", "token": token, "expire": expire})
 // }
 
-// JWT簡單版
 func (ctrl *Controller) Me(c *gin.Context) {
 	userID := c.GetUint("userID")
 
@@ -61,6 +61,7 @@ func (ctrl *Controller) Me(c *gin.Context) {
 
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"error": err.Error()})
+
 		return
 	}
 
@@ -109,4 +110,38 @@ func (ctrl *Controller) Login(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, tokenDetail)
+}
+
+func (ctrl *Controller) Logout(c *gin.Context) {
+	tokenString := c.GetHeader("Authorization")
+
+	tokenArr := strings.Split(tokenString, " ")
+
+	if len(tokenArr) != 2 {
+		c.AbortWithStatus(http.StatusUnauthorized)
+
+		return
+	}
+
+	authType := strings.Trim(tokenArr[0], "\n\r\t")
+
+	if !strings.EqualFold(authType, "Bearer") {
+		c.AbortWithStatus(http.StatusUnauthorized)
+
+		return
+	}
+
+	token := strings.Trim(tokenArr[1], "\n\t\r")
+
+	ad, err := auth.ExtractAccessDetail(token)
+
+	if err != nil {
+		c.AbortWithStatus(http.StatusInternalServerError)
+	}
+
+	if auth.DeleteUUID(ad.AccessUUID) {
+		c.AbortWithStatus(http.StatusOK)
+	} else {
+		c.AbortWithStatus(http.StatusInternalServerError)
+	}
 }

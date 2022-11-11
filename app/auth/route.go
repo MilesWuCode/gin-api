@@ -25,5 +25,7 @@ func Route(router *gin.Engine) {
 
 		// wip:套件無法針對 headers 做快取, 所以 Bearer JWT 無法做到不同人不同資料的快取
 		routerGroup.GET("/me", auth.AuthMiddleware(), controller.Me)
+
+		routerGroup.POST("/logout", auth.AuthMiddleware(), controller.Logout)
 	}
 }
