@@ -1,12 +1,14 @@
 package post
 
 import (
+	"errors"
 	"gin-api/database"
 	"gin-api/model"
 	"net/http"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 )
 
 func UpdatePolicy() gin.HandlerFunc {
@@ -41,10 +43,18 @@ func DeletePolicy() gin.HandlerFunc {
 
 		item := model.Post{ID: uint(id)}
 
-		db.First(&item)
+		if err := db.First(&item).Error; err != nil {
+			if errors.Is(err, gorm.ErrRecordNotFound) {
+				c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"error": err.Error()})
+			} else {
+				c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			}
+
+			return
+		}
 
 		if userID != item.UserID {
-			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "permission denied"})
+			c.AbortWithStatus(http.StatusUnauthorized)
 
 			return
 		}

@@ -2,6 +2,7 @@ package user
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"net/http"
 	"path/filepath"
@@ -13,6 +14,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/minio/minio-go/v7"
 	"go.uber.org/zap"
+	"gorm.io/gorm"
 )
 
 type Controller struct{}
@@ -158,7 +160,11 @@ func (ctrl *Controller) Delete(c *gin.Context) {
 
 	if err := service.Delete(id); err != nil {
 		// Abort(), AbortWithStatusJSON() 不執行後面的middleware不執行
-		c.AbortWithStatusJSON(http.StatusConflict, gin.H{"error": err.Error()})
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		} else {
+			c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		}
 	} else {
 		// Status() 只回應 http
 		c.Status(http.StatusNoContent)
