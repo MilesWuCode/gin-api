@@ -20,7 +20,7 @@ func (service *Service) List(p plugin.Pagination) ([]model.User, error) {
 		return user, err
 	}
 
-	if err := db.Debug().Limit(limit).Offset(offset).Find(&user).Error; err != nil {
+	if err := db.Limit(limit).Offset(offset).Find(&user).Error; err != nil {
 		return nil, err
 	}
 
@@ -31,7 +31,7 @@ func (service *Service) List(p plugin.Pagination) ([]model.User, error) {
 func (service *Service) Create(user *model.User) error {
 	db := database.GetDB()
 
-	if err := db.Debug().Create(&user).Error; err != nil {
+	if err := db.Create(&user).Error; err != nil {
 		return err
 	}
 
@@ -42,7 +42,7 @@ func (service *Service) Create(user *model.User) error {
 func (service *Service) Get(id interface{}, user *model.User) error {
 	db := database.GetDB()
 
-	if err := db.Debug().Where("id = ?", id).First(&user).Error; err != nil {
+	if err := db.Where("id = ?", id).First(&user).Error; err != nil {
 		return err
 	}
 
@@ -53,7 +53,7 @@ func (service *Service) Get(id interface{}, user *model.User) error {
 func (service *Service) Update(id interface{}, data map[string]interface{}, user *model.User) error {
 	db := database.GetDB()
 
-	if err := db.Debug().Where("id = ?", id).First(&user).Error; err != nil {
+	if err := db.Where("id = ?", id).First(&user).Error; err != nil {
 		return err
 	}
 

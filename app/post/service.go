@@ -20,7 +20,7 @@ func (service *Service) List(p plugin.Pagination) ([]model.Post, error) {
 		return post, err
 	}
 
-	query := db.Debug().Preload("User").Limit(limit).Offset(offset)
+	query := db.Preload("User").Limit(limit).Offset(offset)
 
 	// 代號轉規則
 	switch p.Sort {
@@ -43,7 +43,7 @@ func (service *Service) List(p plugin.Pagination) ([]model.Post, error) {
 func (service *Service) Create(post *model.Post) error {
 	db := database.GetDB()
 
-	if err := db.Debug().Create(&post).Error; err != nil {
+	if err := db.Create(&post).Error; err != nil {
 		return err
 	}
 
@@ -54,7 +54,7 @@ func (service *Service) Create(post *model.Post) error {
 func (service *Service) Get(id interface{}, post *model.Post) error {
 	db := database.GetDB()
 
-	if err := db.Debug().Where("id = ?", id).First(&post).Error; err != nil {
+	if err := db.Where("id = ?", id).First(&post).Error; err != nil {
 		return err
 	}
 
@@ -65,7 +65,7 @@ func (service *Service) Get(id interface{}, post *model.Post) error {
 func (service *Service) Update(id interface{}, data map[string]interface{}, post *model.Post) error {
 	db := database.GetDB()
 
-	if err := db.Debug().Where("id = ?", id).First(&post).Error; err != nil {
+	if err := db.Where("id = ?", id).First(&post).Error; err != nil {
 		return err
 	}
 

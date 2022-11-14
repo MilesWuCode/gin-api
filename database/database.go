@@ -54,6 +54,7 @@ func init() {
 
 // 取得物件
 func GetDB() *gorm.DB {
+	// db.Debug()
 	return db
 }
 
@@ -64,7 +65,7 @@ func AutoMigrate() {
 
 // 簡易查詢
 func First(m interface{}) error {
-	if err := db.Debug().First(&m); err != nil {
+	if err := db.First(&m); err != nil {
 		return err.Error
 	}
 
