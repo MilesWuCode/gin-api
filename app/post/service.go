@@ -40,10 +40,10 @@ func (service *Service) List(p plugin.Pagination) ([]model.Post, error) {
 }
 
 // 新增
-func (service *Service) Create(post *model.Post) error {
+func (service *Service) Create(user model.User, post *model.Post) error {
 	db := database.GetDB()
 
-	if err := db.Create(&post).Error; err != nil {
+	if err := db.Model(&user).Association("Posts").Append(post); err != nil {
 		return err
 	}
 

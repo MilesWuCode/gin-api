@@ -3,6 +3,7 @@ package post
 import (
 	"net/http"
 
+	"gin-api/database"
 	"gin-api/model"
 	"gin-api/plugin"
 
@@ -49,11 +50,18 @@ func (ctrl *Controller) Create(c *gin.Context) {
 
 	post.Content = data.Content
 
-	post.UserID = c.GetUint("userID")
+	userID := c.GetUint("userID")
 
-	if err := service.Create(&post); err != nil {
+	user, err := database.GetUser(userID)
+
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusConflict, gin.H{"error": err.Error()})
+	}
+
+	if err := service.Create(user, &post); err != nil {
 		c.AbortWithStatusJSON(http.StatusConflict, gin.H{"error": err.Error()})
 	} else {
+		post.User = user
 		c.JSON(http.StatusOK, gin.H{"data": post})
 	}
 }

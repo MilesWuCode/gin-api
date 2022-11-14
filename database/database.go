@@ -65,9 +65,20 @@ func AutoMigrate() {
 
 // 簡易查詢
 func First(m interface{}) error {
-	if err := db.First(&m); err != nil {
-		return err.Error
+	if result := db.First(&m); result.Error != nil {
+		return result.Error
 	}
 
 	return nil
+}
+
+// 取得User
+func GetUser(id uint) (model.User, error) {
+	user := model.User{ID: id}
+
+	if result := db.First(&user); result.Error != nil {
+		return model.User{}, result.Error
+	}
+
+	return user, nil
 }
