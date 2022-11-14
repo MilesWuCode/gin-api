@@ -15,14 +15,14 @@ type Post struct {
 	DeletedAt gorm.DeletedAt `gorm:"index" json:"deleted_at"`
 
 	// 自訂義欄位
-	Title   string `gorm:"not null;comment:標題" json:"tile"`
+	Title   string `gorm:"not null;comment:標題" json:"title"`
 	Content string `gorm:"type:text;comment:內文" json:"content"`
 	State   bool   `gorm:"default:true" json:"state"`
 
 	// 自訂義關聯
-	UserID uint `gorm:"not null;comment:會員" json:"user_id"`
-	User   User `gorm:"foreignkey:UserID" json:"user,omitempty"`
-	// User User `gorm:"references:ID" json:"user,omitempty"`
+	UserID uint   `gorm:"not null;comment:會員" json:"user_id"`
+	User   User   `gorm:"foreignkey:UserID" json:"user,omitempty"`
+	Tag    []*Tag `gorm:"many2many:post_tags;" json:"tags,omitempty"`
 }
 
 // table-name
