@@ -104,9 +104,7 @@ docker run --name redis \
 docker run --name mysql -p 3306:3306 \
 -v ${PWD}:/var/lib/mysql \
 -e MYSQL_ROOT_PASSWORD=password \
--e MYSQL_DATABASE=cms \
--e MYSQL_USER=user \
--e MYSQL_PASSWORD=password \
+-e MYSQL_DATABASE=gin-api \
 --restart unless-stopped \
 -d mysql:latest
 ```
