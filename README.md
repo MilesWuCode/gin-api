@@ -55,6 +55,7 @@
   - https://github.com/golang-jwt/jwt
 
 - auth
+
   - https://github.com/go-oauth2/oauth2 - Server
   - https://github.com/golang/oauth2 - Client
   - https://github.com/volatiletech/authboss - 參考
@@ -83,4 +84,29 @@
 ## 學習知識
 
 - https://github.com/open-policy-agent/opa
-- 
+-
+
+## Docker
+
+- redis
+
+```sh
+docker run --name redis \
+-p 6379:6379 \
+-v ${PWD}:/data \
+--restart unless-stopped \
+-d redis:latest
+```
+
+- mysql
+
+```sh
+docker run --name mysql -p 3306:3306 \
+-v ${PWD}:/var/lib/mysql \
+-e MYSQL_ROOT_PASSWORD=password \
+-e MYSQL_DATABASE=cms \
+-e MYSQL_USER=user \
+-e MYSQL_PASSWORD=password \
+--restart unless-stopped \
+-d mysql:latest
+```
