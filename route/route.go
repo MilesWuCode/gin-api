@@ -41,6 +41,12 @@ func Router() *gin.Engine {
 	// Set a lower memory limit for multipart forms (default is 32 MiB)
 	router.MaxMultipartMemory = 8 << 20 // 8 MiB
 
+	// Static-path
+	router.Static("/static", "./static")
+
+	// Static-file
+	router.StaticFile("favicon.ico", "./static/favicon.ico")
+
 	// auth
 	auth.Route(router)
 
