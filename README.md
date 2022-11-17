@@ -73,6 +73,10 @@
 
   - https://github.com/ThreeDotsLabs/watermill
 
+- graphql
+
+  - https://github.com/99designs/gqlgen
+
 ## 待開發
 
 - roles & permissions
@@ -86,7 +90,6 @@
 ## 學習知識
 
 - https://github.com/open-policy-agent/opa
--
 
 ## Docker
 
