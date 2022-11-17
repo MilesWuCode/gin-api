@@ -12,7 +12,7 @@ import (
 
 func main() {
 	// 初始化config
-	plugin.InitConfig()
+	plugin.Config()
 
 	// gin.mode: gin.TestMode, gin.DebugMode, gin.ReleaseMode
 	gin.SetMode(gin.DebugMode)

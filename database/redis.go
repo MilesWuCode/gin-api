@@ -12,7 +12,7 @@ import (
 var rdb *redis.Client
 
 func init() {
-	plugin.InitConfig()
+	plugin.Config()
 
 	redisAddr := fmt.Sprintf("%v:%d", viper.GetString("redis.host"), viper.GetInt("redis.port"))
 

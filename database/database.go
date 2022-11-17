@@ -3,8 +3,10 @@ package database
 import (
 	"fmt"
 	"gin-api/model"
+	"gin-api/plugin"
 	"time"
 
+	"github.com/spf13/viper"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
@@ -14,11 +16,13 @@ var err error
 
 // 初始化
 func init() {
-	user := "root"
-	password := "password"
-	host := "127.0.0.1"
-	port := 3306
-	database := "gin-api"
+	plugin.Config()
+
+	user := viper.GetString("mysql.user")
+	password := viper.GetString("mysql.password")
+	host := viper.GetString("mysql.host")
+	port := viper.GetInt("mysql.port")
+	database := viper.GetString("mysql.database")
 
 	dsn := fmt.Sprintf("%v:%v@tcp(%v:%d)/%v?charset=utf8mb4&parseTime=True&loc=Local", user, password, host, port, database)
 
