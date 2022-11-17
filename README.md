@@ -12,7 +12,8 @@
 
   - https://github.com/go-gorm/gorm
   - https://github.com/go-gorm/dbresolver
-  - https://entgo.io - 參考
+  - https://entgo.io
+  - https://atlasgo.io
 
 - database
 
@@ -80,6 +81,7 @@
 - graphql - 另開專案
 - grpc - 另開專案
 - ent - 另開專案
+- atlas
 
 ## 學習知識
 
